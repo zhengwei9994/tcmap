@@ -56,8 +56,8 @@
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
-			    order by a.nyear
 			<otherwise>
+				order by a.nyear
 			</otherwise>
 		</choose>
 	</select>
