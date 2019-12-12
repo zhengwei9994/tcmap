@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.wlkj.dao.CatchGeographicTrackingDao">
+
+    <sql id="catchGeographicTrackingColumns">
+        a.id AS "id",
+        a.area_name AS "areaName",
+        a.track_num AS "trackNum"
+    </sql>
+
+
+    <select id="get" resultType="CatchGeographicTracking">
+        SELECT
+        <include refid="catchGeographicTrackingColumns"/>
+        FROM catch_geographic_tracking a
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="CatchGeographicTracking">
+        SELECT
+        <include refid="catchGeographicTrackingColumns"/>
+        FROM catch_geographic_tracking a
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="CatchGeographicTracking">
+        SELECT
+        <include refid="catchGeographicTrackingColumns"/>
+        FROM catch_geographic_tracking a
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO catch_geographic_tracking(
+        id,
+        area_name,
+        track_num
+        ) VALUES (
+        #{id},
+        #{areaName},
+        #{trackNum}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE catch_geographic_tracking SET
+        area_name = #{areaName},
+        track_num = #{trackNum}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        DELETE FROM catch_geographic_tracking
+        WHERE id = #{id}
+    </update>
+</mapper>

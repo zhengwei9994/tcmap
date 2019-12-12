@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.BusinessHighschoolDao">
+    
+	<sql id="businessHighschoolColumns">
+		a.id AS "id",
+		a.mechanism AS "mechanism",
+		a.num AS "num",
+		a.month AS "month",
+		a.year AS "year"
+	</sql>
+	
+	<sql id="businessHighschoolJoins">
+	</sql>
+    
+	<select id="get" resultType="BusinessHighschool">
+		SELECT 
+			<include refid="businessHighschoolColumns"/>
+		FROM business_highschool a
+		<include refid="businessHighschoolJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BusinessHighschool">
+		SELECT 
+			<include refid="businessHighschoolColumns"/>
+		FROM business_highschool a
+		<include refid="businessHighschoolJoins"/>
+		<where>
+			
+			<if test="mechanism != null and mechanism != ''">
+				AND a.mechanism = #{mechanism}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+			<if test="year != null and year != ''">
+				AND a.year = #{year}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by `year` DESC,`month`
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BusinessHighschool">
+		SELECT 
+			<include refid="businessHighschoolColumns"/>
+		FROM business_highschool a
+		<include refid="businessHighschoolJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO business_highschool(
+			id,
+			mechanism,
+			num,
+			`month`,
+			`year`
+		) VALUES (
+			#{id},
+			#{mechanism},
+			#{num},
+			#{month},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE business_highschool SET 	
+			mechanism = #{mechanism},
+			num = #{num},
+			`month` = #{month},
+			year = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM business_highschool
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.DevelopmentAbsorbDao">
+    
+	<sql id="developmentAbsorbColumns">
+		a.id AS "id",
+		a.item AS "item",
+		a.num AS "num",
+		a.increase AS "increase",
+		a.month as "month",
+		a.year AS "year"
+	</sql>
+	
+	<sql id="developmentAbsorbJoins">
+	</sql>
+    
+	<select id="get" resultType="DevelopmentAbsorb">
+		SELECT 
+			<include refid="developmentAbsorbColumns"/>
+		FROM development_absorb a
+		<include refid="developmentAbsorbJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DevelopmentAbsorb">
+		SELECT 
+			<include refid="developmentAbsorbColumns"/>
+		FROM development_absorb a
+		<include refid="developmentAbsorbJoins"/>
+		<where>
+			
+			<if test="item != null and item != ''">
+				AND a.item = #{item}
+			</if>
+			<if test="num != null and num != ''">
+				AND a.num = #{num}
+			</if>
+			<if test="increase != null and increase != ''">
+				AND a.increase = #{increase}
+			</if>
+			<if test="year != null and year != ''">
+				AND a.year = #{year}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.year desc ,a.month
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DevelopmentAbsorb">
+		SELECT 
+			<include refid="developmentAbsorbColumns"/>
+		FROM development_absorb a
+		<include refid="developmentAbsorbJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO development_absorb(
+			id,
+			item,
+			num,
+			increase,
+			`month`,
+			`year`
+		) VALUES (
+			#{id},
+			#{item},
+			#{num},
+			#{increase},
+			#{month},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE development_absorb SET 	
+			item = #{item},
+			num = #{num},
+			increase = #{increase},
+			`month` = #{month},
+			`year` = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM development_absorb
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

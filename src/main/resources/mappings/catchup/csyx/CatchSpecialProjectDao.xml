@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchSpecialProjectDao">
+    
+	<sql id="catchSpecialProjectColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.projectname AS "projectname",
+		a.details AS "details",
+		a.sort AS "sort"
+	</sql>
+	
+	<sql id="catchSpecialProjectJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchSpecialProject">
+		SELECT 
+			<include refid="catchSpecialProjectColumns"/>
+		FROM catch_special_project a
+		<include refid="catchSpecialProjectJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchSpecialProject">
+		SELECT 
+			<include refid="catchSpecialProjectColumns"/>
+		FROM catch_special_project a
+		<include refid="catchSpecialProjectJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchSpecialProject">
+		SELECT 
+			<include refid="catchSpecialProjectColumns"/>
+		FROM catch_special_project a
+		<include refid="catchSpecialProjectJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_special_project(
+			id,
+			nyear,
+			projectname,
+			details,
+			sort
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{projectname},
+			#{details},
+			#{sort}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_special_project(
+		id,
+		nyear,
+		projectname,
+		details,
+		sort
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.projectname},
+			#{item.details},
+			#{item.sort}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_special_project SET 	
+			nyear = #{nyear},
+			projectname = #{projectname},
+			details = #{details},
+			sort = #{sort}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_special_project
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

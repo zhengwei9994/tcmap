@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.safecity.dao.SafetyProfileDao">
+    
+	<sql id="safetyProfileColumns">
+		a.id AS "id",
+		a.safe_city_id AS "safeCityId",
+		a.safety_index AS "safetyIndex",
+		a.drug_rate AS "drugRate",
+		a.food_rate AS "foodRate",
+		a.crimel_solve_rate AS "crimelSolveRate",
+		a.crime_rate AS "crimeRate",
+		a.civil_rate AS "civilRate",
+		a.traffic_num AS "trafficNum",
+		a.year_rate AS "yearRate",
+		a.chain_rate AS "chainRate",
+		a.fire_num AS "fireNum",
+		a.fire_truck_num AS "fireTruckNum",
+		a.fire_brigade AS "fireBrigade",
+		a.statistic_date AS "statisticDate",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		c.area as "safeCity"
+	</sql>
+	
+	<sql id="safetyProfileJoins">
+		left join safe_city c on a.safe_city_id = c.id
+	</sql>
+    
+	<select id="get" resultType="SafetyProfile">
+		SELECT 
+			<include refid="safetyProfileColumns"/>
+		FROM safety_profile a
+		<include refid="safetyProfileJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SafetyProfile">
+		SELECT 
+			<include refid="safetyProfileColumns"/>
+		FROM safety_profile a
+		<include refid="safetyProfileJoins"/>
+		<where>
+			<if test="safeCity != null and safeCity != ''">
+				and c.area = #{safeCity}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SafetyProfile">
+		SELECT 
+			<include refid="safetyProfileColumns"/>
+		FROM safety_profile a
+		<include refid="safetyProfileJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO safety_profile(
+			id,
+			safe_city_id,
+			safety_index,
+			drug_rate,
+			food_rate,
+			crimel_solve_rate,
+			crime_rate,
+			civil_rate,
+			traffic_num,
+			year_rate,
+			chain_rate,
+			fire_num,
+			fire_truck_num,
+			fire_brigade,
+			statistic_date,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{safeCityId},
+			#{safetyIndex},
+			#{drugRate},
+			#{foodRate},
+			#{crimelSolveRate},
+			#{crimeRate},
+			#{civilRate},
+			#{trafficNum},
+			#{yearRate},
+			#{chainRate},
+			#{fireNum},
+			#{fireTruckNum},
+			#{fireBrigade},
+			#{statisticDate},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE safety_profile SET 	
+			safe_city_id = #{safeCityId},
+			safety_index = #{safetyIndex},
+			drug_rate = #{drugRate},
+			food_rate = #{foodRate},
+			crimel_solve_rate = #{crimelSolveRate},
+			crime_rate = #{crimeRate},
+			civil_rate = #{civilRate},
+			traffic_num = #{trafficNum},
+			year_rate = #{yearRate},
+			chain_rate = #{chainRate},
+			fire_num = #{fireNum},
+			fire_truck_num = #{fireTruckNum},
+			fire_brigade = #{fireBrigade},
+			statistic_date = #{statisticDate},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM safety_profile
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

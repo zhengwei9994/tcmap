@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchServiceIndustryDao">
+    
+	<sql id="catchServiceIndustryColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.growth AS "growth",
+		a.point AS "point"
+	</sql>
+	
+	<sql id="catchServiceIndustryJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchServiceIndustry">
+		SELECT 
+			<include refid="catchServiceIndustryColumns"/>
+		FROM catch_service_industry a
+		<include refid="catchServiceIndustryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchServiceIndustry">
+		SELECT 
+			<include refid="catchServiceIndustryColumns"/>
+		FROM catch_service_industry a
+		<include refid="catchServiceIndustryJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchServiceIndustry">
+		SELECT 
+			<include refid="catchServiceIndustryColumns"/>
+		FROM catch_service_industry a
+		<include refid="catchServiceIndustryJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_service_industry(
+			id,
+			nyear,
+			growth,
+			point
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{growth},
+			#{point}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_service_industry(
+		id,
+		nyear,
+		growth,
+		point
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.growth},
+			#{item.point}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_service_industry SET 	
+			nyear = #{nyear},
+			growth = #{growth},
+			point = #{point}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_service_industry
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

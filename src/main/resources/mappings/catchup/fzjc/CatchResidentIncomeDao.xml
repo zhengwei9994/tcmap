@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchResidentIncomeDao">
+    
+	<sql id="catchResidentIncomeColumns">
+		a.id AS "id",
+		a.resident_clusters AS "residentClusters",
+		a.wage_income AS "wageIncome",
+		a.operating_income AS "operatingIncome",
+		a.ownership_income AS "ownershipIncome",
+		a.transfer_income AS "transferIncome",
+		a.rate AS "rate"
+	</sql>
+	
+	<sql id="catchResidentIncomeJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchResidentIncome">
+		SELECT 
+			<include refid="catchResidentIncomeColumns"/>
+		FROM catch_resident_income a
+		<include refid="catchResidentIncomeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchResidentIncome">
+		SELECT 
+			<include refid="catchResidentIncomeColumns"/>
+		FROM catch_resident_income a
+		<include refid="catchResidentIncomeJoins"/>
+		<where>
+			
+			<if test="residentClusters != null and residentClusters != ''">
+				AND a.resident_clusters LIKE 
+					<if test="dbName == 'oracle'">'%'||#{residentClusters}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{residentClusters}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{residentClusters},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchResidentIncome">
+		SELECT 
+			<include refid="catchResidentIncomeColumns"/>
+		FROM catch_resident_income a
+		<include refid="catchResidentIncomeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_resident_income(
+			id,
+			resident_clusters,
+			wage_income,
+			operating_income,
+			ownership_income,
+			transfer_income,
+			rate
+		) VALUES (
+			#{id},
+			#{residentClusters},
+			#{wageIncome},
+			#{operatingIncome},
+			#{ownershipIncome},
+			#{transferIncome},
+			#{rate}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_resident_income(
+			id,
+			resident_clusters,
+			wage_income,
+			operating_income,
+			ownership_income,
+			transfer_income,
+			rate
+		) VALUES  
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.residentClusters},
+			#{item.wageIncome},
+			#{item.operatingIncome},
+			#{item.ownershipIncome},
+			#{item.transferIncome},
+			#{item.rate}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_resident_income SET 	
+			resident_clusters = #{residentClusters},
+			wage_income = #{wageIncome},
+			operating_income = #{operatingIncome},
+			ownership_income = #{ownershipIncome},
+			transfer_income = #{transferIncome},
+			rate = #{rate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_resident_income
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

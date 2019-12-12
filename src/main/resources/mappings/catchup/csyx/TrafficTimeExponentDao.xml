@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.TrafficTimeExponentDao">
+    
+	<sql id="trafficTimeExponentColumns">
+		a.id AS "id",
+		a.value AS "value",
+		a.city AS "city",
+		a.time AS "time"
+	</sql>
+	
+	<sql id="trafficTimeExponentJoins">
+	</sql>
+    
+	<select id="get" resultType="TrafficTimeExponent">
+		SELECT 
+			<include refid="trafficTimeExponentColumns"/>
+		FROM traffic_time_exponent a
+		<include refid="trafficTimeExponentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TrafficTimeExponent">
+		SELECT 
+			<include refid="trafficTimeExponentColumns"/>
+		FROM traffic_time_exponent a
+		<include refid="trafficTimeExponentJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TrafficTimeExponent">
+		SELECT 
+			<include refid="trafficTimeExponentColumns"/>
+		FROM traffic_time_exponent a
+		<include refid="trafficTimeExponentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO traffic_time_exponent(
+			id,
+			value,
+			city,
+			time
+		) VALUES (
+			#{id},
+			#{value},
+			#{city},
+			#{time}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE traffic_time_exponent SET 	
+			value = #{value},
+			city = #{city},
+			time = #{time}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM traffic_time_exponent
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

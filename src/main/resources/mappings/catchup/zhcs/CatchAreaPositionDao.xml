@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchAreaPositionDao">
+    
+	<sql id="catchAreaPositionColumns">
+		a.id AS "id",
+		a.area_name AS "areaName",
+		a.lon AS "lon",
+		a.lat AS "lat"
+	</sql>
+	
+	<sql id="catchAreaPositionJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchAreaPosition">
+		SELECT 
+			<include refid="catchAreaPositionColumns"/>
+		FROM catch_area_position a
+		<include refid="catchAreaPositionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchAreaPosition">
+		SELECT 
+			<include refid="catchAreaPositionColumns"/>
+		FROM catch_area_position a
+		<include refid="catchAreaPositionJoins"/>
+		<where>
+			
+			<if test="areaName != null and areaName != ''">
+				AND a.area_name = #{areaName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchAreaPosition">
+		SELECT 
+			<include refid="catchAreaPositionColumns"/>
+		FROM catch_area_position a
+		<include refid="catchAreaPositionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_area_position(
+			id,
+			area_name,
+			lon,
+			lat
+		) VALUES (
+			#{id},
+			#{areaName},
+			#{lon},
+			#{lat}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_area_position(
+			id,
+			area_name,
+			lon,
+			lat
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.areaName},
+			#{item.lon},
+			#{item.lat}
+		)  
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_area_position SET 	
+			area_name = #{areaName},
+			lon = #{lon},
+			lat = #{lat}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_area_position
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

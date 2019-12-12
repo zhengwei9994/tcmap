@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchPollutionTreatmentDao">
+    
+	<sql id="catchPollutionTreatmentColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.today_sum AS "todaySum",
+		a.rank AS "rank",
+		a.enterprise AS "enterprise",
+		a.mark_car AS "markCar"
+	</sql>
+	
+	<sql id="catchPollutionTreatmentJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchPollutionTreatment">
+		SELECT 
+			<include refid="catchPollutionTreatmentColumns"/>
+		FROM catch_pollution_treatment a
+		<include refid="catchPollutionTreatmentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchPollutionTreatment">
+		SELECT 
+			<include refid="catchPollutionTreatmentColumns"/>
+		FROM catch_pollution_treatment a
+		<include refid="catchPollutionTreatmentJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchPollutionTreatment">
+		SELECT 
+			<include refid="catchPollutionTreatmentColumns"/>
+		FROM catch_pollution_treatment a
+		<include refid="catchPollutionTreatmentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_pollution_treatment(
+			id,
+			nyear,
+			today_sum,
+			rank,
+			enterprise,
+			mark_car
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{todaySum},
+			#{rank},
+			#{enterprise},
+			#{markCar}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_pollution_treatment(
+		id,
+		nyear,
+		today_sum,
+		rank,
+		enterprise,
+		mark_car
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.todaySum},
+			#{item.rank},
+			#{item.enterprise},
+			#{item.markCar}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_pollution_treatment SET 	
+			nyear = #{nyear},
+			today_sum = #{todaySum},
+			rank = #{rank},
+			enterprise = #{enterprise},
+			mark_car = #{markCar}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_pollution_treatment
+		WHERE id = #{id}
+	</update>
+	<select id="pollutionTodayData" resultType="CatchPollutionTreatment">
+	  SELECT
+		a.nyear AS "nyear",
+		a.today_sum AS "todaySum",
+		a.rank AS "rank",
+		a.enterprise AS "enterprise",
+		a.mark_car AS "markCar"
+		FROM catch_pollution_treatment a
+		<where>
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchPlanInvestmentDao">
+    
+	<sql id="catchPlanInvestmentColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.planned_investment AS "plannedInvestment",
+		a.total_investment AS "totalInvestment",
+		a.unit AS "unit"
+	</sql>
+	
+	<sql id="catchPlanInvestmentJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchPlanInvestment">
+		SELECT 
+			<include refid="catchPlanInvestmentColumns"/>
+		FROM catch_plan_investment a
+		<include refid="catchPlanInvestmentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchPlanInvestment">
+		SELECT 
+			<include refid="catchPlanInvestmentColumns"/>
+		FROM catch_plan_investment a
+		<include refid="catchPlanInvestmentJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchPlanInvestment">
+		SELECT 
+			<include refid="catchPlanInvestmentColumns"/>
+		FROM catch_plan_investment a
+		<include refid="catchPlanInvestmentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_plan_investment(
+			id,
+			nyear,
+			planned_investment,
+			total_investment,
+			unit
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{plannedInvestment},
+			#{totalInvestment},
+			#{unit}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_plan_investment(
+		id,
+		nyear,
+		planned_investment,
+		total_investment,
+		unit
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.plannedInvestment},
+			#{item.totalInvestment},
+			#{item.unit}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_plan_investment SET 	
+			nyear = #{nyear},
+			planned_investment = #{plannedInvestment},
+			total_investment = #{totalInvestment},
+			unit = #{unit}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_plan_investment
+		WHERE id = #{id}
+	</update>
+	<select id="yearPlanData" resultType="java.util.HashMap">
+		SELECT
+		 a.nyear AS "nyear",
+		 a.planned_investment AS "plannedInvestment",
+		 a.unit AS "unit"
+		 FROM catch_plan_investment a
+		 <where>
+			 <if test="nyear != null and nyear != ''">
+				 AND a.nyear = #{nyear}
+			 </if>
+		 </where>
+	</select>
+</mapper>

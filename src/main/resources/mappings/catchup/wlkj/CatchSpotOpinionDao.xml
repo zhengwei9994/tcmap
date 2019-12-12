@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.wlkj.dao.CatchSpotOpinionDao">
+    
+	<sql id="catchSpotOpinionColumns">
+		a.id AS "id",
+		a.china_type AS "chinaType",
+		a.number AS "number",
+		a.date AS "date"
+	</sql>
+	
+	<sql id="catchSpotOpinionJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchSpotOpinion">
+		SELECT 
+			<include refid="catchSpotOpinionColumns"/>
+		FROM catch_spot_opinion a
+		<include refid="catchSpotOpinionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchSpotOpinion">
+		SELECT 
+			<include refid="catchSpotOpinionColumns"/>
+		FROM catch_spot_opinion a
+		<include refid="catchSpotOpinionJoins"/>
+		<where>
+			
+			<if test="chinaType != null and chinaType != ''">
+				AND a.china_type = #{chinaType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchSpotOpinion">
+		SELECT 
+			<include refid="catchSpotOpinionColumns"/>
+		FROM catch_spot_opinion a
+		<include refid="catchSpotOpinionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_spot_opinion(
+			id,
+			china_type,
+			number,
+			date
+		) VALUES (
+			#{id},
+			#{chinaType},
+			#{number},
+			#{date}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_spot_opinion SET 	
+			china_type = #{chinaType},
+			number = #{number},
+			date = #{date}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_spot_opinion
+		WHERE id = #{id}
+	</update>
+	<select id="spotData" resultType="CatchSpotOpinion">
+		SELECT
+			a.china_type AS "chinaType",
+		    a.number AS "number",
+		    max(a.date) AS "date"
+		FROM catch_spot_opinion a
+		GROUP BY a.china_type
+	</select>
+</mapper>

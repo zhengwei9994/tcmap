@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.TrafficStreetUpDao">
+    
+	<sql id="trafficStreetUpColumns">
+		a.id AS "id",
+		a.date AS "date",
+		a.type AS "type",
+		a.num AS "num",
+		a.street AS "street"
+	</sql>
+	
+	<sql id="trafficStreetUpJoins">
+	</sql>
+    
+	<select id="get" resultType="TrafficStreetUp">
+		SELECT 
+			<include refid="trafficStreetUpColumns"/>
+		FROM traffic_street_up a
+		<include refid="trafficStreetUpJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TrafficStreetUp">
+		SELECT 
+			<include refid="trafficStreetUpColumns"/>
+		FROM traffic_street_up a
+		<include refid="trafficStreetUpJoins"/>
+		<where>
+			
+			<if test="beginDate != null and endDate != null and beginDate != '' and endDate != ''">
+				AND a.date BETWEEN #{beginDate} AND #{endDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TrafficStreetUp">
+		SELECT 
+			<include refid="trafficStreetUpColumns"/>
+		FROM traffic_street_up a
+		<include refid="trafficStreetUpJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO traffic_street_up(
+			id,
+			date,
+			type,
+			num,
+			street
+		) VALUES (
+			#{id},
+			#{date},
+			#{type},
+			#{num},
+			#{street}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE traffic_street_up SET 	
+			date = #{date},
+			type = #{type},
+			num = #{num},
+			street = #{street}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM traffic_street_up
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

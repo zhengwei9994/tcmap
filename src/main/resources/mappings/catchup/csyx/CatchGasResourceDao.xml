@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchGasResourceDao">
+    
+	<sql id="catchGasResourceColumns">
+		a.id AS "id",
+		a.type AS "type",
+		a.powder_value AS "powderValue",
+		a.oxynitride_value AS "oxynitrideValue",
+		a.co_value AS "coValue"
+	</sql>
+	
+	<sql id="catchGasResourceJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchGasResource">
+		SELECT 
+			<include refid="catchGasResourceColumns"/>
+		FROM catch_gas_resource a
+		<include refid="catchGasResourceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchGasResource">
+		SELECT 
+			<include refid="catchGasResourceColumns"/>
+		FROM catch_gas_resource a
+		<include refid="catchGasResourceJoins"/>
+		<where>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchGasResource">
+		SELECT 
+			<include refid="catchGasResourceColumns"/>
+		FROM catch_gas_resource a
+		<include refid="catchGasResourceJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_gas_resource(
+			id,
+			type,
+			powder_value,
+			oxynitride_value,
+			co_value
+		) VALUES (
+			#{id},
+			#{type},
+			#{powderValue},
+			#{oxynitrideValue},
+			#{coValue}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_gas_resource(
+		id,
+		type,
+		powder_value,
+		oxynitride_value,
+		co_value
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.type},
+			#{item.powderValue},
+			#{item.oxynitrideValue},
+			#{item.coValue}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_gas_resource SET 	
+			type = #{type},
+			powder_value = #{powderValue},
+			oxynitride_value = #{oxynitrideValue},
+			co_value = #{coValue}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_gas_resource
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

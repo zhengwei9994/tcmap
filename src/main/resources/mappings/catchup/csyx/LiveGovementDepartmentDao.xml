@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.LiveGovementDepartmentDao">
+    
+	<sql id="liveGovementDepartmentColumns">
+		a.id AS "id",
+		a.department AS "department",
+		a.num AS "num"
+	</sql>
+	
+	<sql id="liveGovementDepartmentJoins">
+	</sql>
+    
+	<select id="get" resultType="LiveGovementDepartment">
+		SELECT 
+			<include refid="liveGovementDepartmentColumns"/>
+		FROM live_govement_department a
+		<include refid="liveGovementDepartmentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="LiveGovementDepartment">
+		SELECT 
+			<include refid="liveGovementDepartmentColumns"/>
+		FROM live_govement_department a
+		<include refid="liveGovementDepartmentJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LiveGovementDepartment">
+		SELECT 
+			<include refid="liveGovementDepartmentColumns"/>
+		FROM live_govement_department a
+		<include refid="liveGovementDepartmentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO live_govement_department(
+			id,
+			department,
+			num
+		) VALUES (
+			#{id},
+			#{department},
+			#{num}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE live_govement_department SET 	
+			department = #{department},
+			num = #{num}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM live_govement_department
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

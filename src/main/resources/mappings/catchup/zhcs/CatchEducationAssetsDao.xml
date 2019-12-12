@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchEducationAssetsDao">
+    
+	<sql id="catchEducationAssetsColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.month as "month",
+		a.education_type AS "educationType",
+		a.school_number AS "schoolNumber",
+		a.teaching_staff AS "teachingStaff"
+	</sql>
+	
+	<sql id="catchEducationAssetsJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchEducationAssets">
+		SELECT 
+			<include refid="catchEducationAssetsColumns"/>
+		FROM catch_education_assets a
+		<include refid="catchEducationAssetsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchEducationAssets">
+		SELECT 
+			<include refid="catchEducationAssetsColumns"/>
+		FROM catch_education_assets a
+		<include refid="catchEducationAssetsJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+			<if test="educationType != null and educationType != ''">
+				AND a.education_type = #{educationType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by nyear desc,`month`
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchEducationAssets">
+		SELECT 
+			<include refid="catchEducationAssetsColumns"/>
+		FROM catch_education_assets a
+		<include refid="catchEducationAssetsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_education_assets(
+			id,
+			nyear,
+			`month`,
+			education_type,
+			school_number,
+			teaching_staff
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{month},
+			#{educationType},
+			#{schoolNumber},
+			#{teachingStaff}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_education_assets SET 	
+			nyear = #{nyear},
+			`month` = #{month},
+			education_type = #{educationType},
+			school_number = #{schoolNumber},
+			teaching_staff = #{teachingStaff}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_education_assets
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteAll">
+		DELETE FROM catch_education_assets
+	</update>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_education_assets(
+		id,
+		nyear,
+		`month`,
+		education_type,
+		school_number,
+		teaching_staff
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id}, #{item.nyear},	#{item.month},	#{item.educationType},#{item.schoolNumber},#{item.teachingStaff})
+		</foreach>
+	</insert>
+</mapper>

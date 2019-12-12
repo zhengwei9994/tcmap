@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csly.dao.TouristNetDataDao">
+    
+	<sql id="touristNetDataColumns">
+		a.id AS "id",
+		a.source AS "source",
+		a.scenic AS "scenic",
+		a.content AS "content"
+	</sql>
+	
+	<sql id="touristNetDataJoins">
+	</sql>
+    
+	<select id="get" resultType="TouristNetData">
+		SELECT 
+			<include refid="touristNetDataColumns"/>
+		FROM tourist_net_data a
+		<include refid="touristNetDataJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TouristNetData">
+		SELECT 
+			<include refid="touristNetDataColumns"/>
+		FROM tourist_net_data a
+		<include refid="touristNetDataJoins"/>
+		<where>
+			
+			<if test="source != null and source != ''">
+				AND a.source = #{source}
+			</if>
+			<if test="scenic != null and scenic != ''">
+				AND a.scenic = #{scenic}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TouristNetData">
+		SELECT 
+			<include refid="touristNetDataColumns"/>
+		FROM tourist_net_data a
+		<include refid="touristNetDataJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tourist_net_data(
+			id,
+			source,
+			scenic,
+			content
+		) VALUES (
+			#{id},
+			#{source},
+			#{scenic},
+			#{content}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tourist_net_data SET 	
+			source = #{source},
+			scenic = #{scenic},
+			content = #{content}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tourist_net_data
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchGovernmentDao">
+    
+	<sql id="catchGovernmentColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.governance_type AS "governanceType",
+		a.numerical_value AS "numericalValue",
+		a.unit AS "unit"
+	</sql>
+	
+	<sql id="catchGovernmentJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchGovernment">
+		SELECT 
+			<include refid="catchGovernmentColumns"/>
+		FROM catch_government a
+		<include refid="catchGovernmentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchGovernment">
+		SELECT 
+			<include refid="catchGovernmentColumns"/>
+		FROM catch_government a
+		<include refid="catchGovernmentJoins"/>
+		<where>
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="governanceType != null and governanceType != ''">
+				AND a.governance_type = #{governanceType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchGovernment">
+		SELECT 
+			<include refid="catchGovernmentColumns"/>
+		FROM catch_government a
+		<include refid="catchGovernmentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_government(
+			id,
+			nyear,
+			governance_type,
+			numerical_value,
+			unit
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{governanceType},
+			#{numericalValue},
+			#{unit}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_government(
+		id,
+		nyear,
+		governance_type,
+		numerical_value,
+		unit
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.governanceType},
+			#{item.numericalValue},
+			#{item.unit}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_government SET 	
+			nyear = #{nyear},
+			governance_type = #{governanceType},
+			numerical_value = #{numericalValue},
+			unit = #{unit}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_government
+		WHERE id = #{id}
+	</update>
+	<select id="governmentData" resultType="CatchGovernment">
+		SELECT
+		a.nyear AS "nyear",
+		a.governance_type AS "governanceType",
+		a.numerical_value AS "numericalValue",
+		a.unit AS "unit"
+		FROM catch_government a
+		<where>
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.ddgl.dao.TcSyserviceManangerDao">
+    
+	<sql id="tcSyserviceManangerColumns">
+		a.id AS "id",
+		a.sys_name AS "sysName",
+		a.sys_domain AS "sysDomain",
+		a.sys_code AS "sysCode",
+		a.key_words AS "keyWords",
+		a.sys_intro AS "sysIntro"
+	</sql>
+	
+	<sql id="tcSyserviceManangerJoins">
+	</sql>
+    
+	<select id="get" resultType="TcSyserviceMananger">
+		SELECT 
+			<include refid="tcSyserviceManangerColumns"/>
+		FROM tc_syservice_mananger a
+		<include refid="tcSyserviceManangerJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TcSyserviceMananger">
+		SELECT 
+			<include refid="tcSyserviceManangerColumns"/>
+		FROM tc_syservice_mananger a
+		<include refid="tcSyserviceManangerJoins"/>
+		<where>
+			
+			<if test="sysName != null and sysName != ''">
+				AND a.sys_name = #{sysName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TcSyserviceMananger">
+		SELECT 
+			<include refid="tcSyserviceManangerColumns"/>
+		FROM tc_syservice_mananger a
+		<include refid="tcSyserviceManangerJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tc_syservice_mananger(
+			id,
+			sys_name,
+			sys_domain,
+			sys_code,
+			key_words,
+			sys_intro
+		) VALUES (
+			#{id},
+			#{sysName},
+			#{sysDomain},
+			#{sysCode},
+			#{keyWords},
+			#{sysIntro}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tc_syservice_mananger SET 	
+			sys_name = #{sysName},
+			sys_domain = #{sysDomain},
+			sys_code = #{sysCode},
+			key_words = #{keyWords},
+			sys_intro = #{sysIntro}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tc_syservice_mananger
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.ShowImpactWeightDao">
+    
+	<sql id="showImpactWeightColumns">
+		a.id AS "id",
+		a.industry AS "industry",
+		a.population_rate AS "populationRate",
+		a.gdp_rate AS "gdpRate",
+		a.year as "year"
+	</sql>
+	
+	<sql id="showImpactWeightJoins">
+	</sql>
+    
+	<select id="get" resultType="ShowImpactWeight">
+		SELECT 
+			<include refid="showImpactWeightColumns"/>
+		FROM show_impact_weight a
+		<include refid="showImpactWeightJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShowImpactWeight">
+		SELECT 
+			<include refid="showImpactWeightColumns"/>
+		FROM show_impact_weight a
+		<include refid="showImpactWeightJoins"/>
+		<where>
+			<if test="industry != null and industry != ''">
+				and industry = #{industry}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShowImpactWeight">
+		SELECT 
+			<include refid="showImpactWeightColumns"/>
+		FROM show_impact_weight a
+		<include refid="showImpactWeightJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO show_impact_weight(
+			id,
+			industry,
+			population_rate,
+			gdp_rate,
+			year
+		) VALUES (
+			#{id},
+			#{industry},
+			#{populationRate},
+			#{gdpRate},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE show_impact_weight SET 	
+			industry = #{industry},
+			population_rate = #{populationRate},
+			gdp_rate = #{gdpRate},
+			year = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM show_impact_weight
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

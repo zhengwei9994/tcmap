@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.LiveGovementSituationDao">
+    
+	<sql id="liveGovementSituationColumns">
+		a.id AS "id",
+		a.net AS "net",
+		a.net_situation AS "netSituation"
+	</sql>
+	
+	<sql id="liveGovementSituationJoins">
+	</sql>
+    
+	<select id="get" resultType="LiveGovementSituation">
+		SELECT 
+			<include refid="liveGovementSituationColumns"/>
+		FROM live_govement_situation a
+		<include refid="liveGovementSituationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="LiveGovementSituation">
+		SELECT 
+			<include refid="liveGovementSituationColumns"/>
+		FROM live_govement_situation a
+		<include refid="liveGovementSituationJoins"/>
+		<where>
+			
+			<if test="net != null and net != ''">
+				AND a.net = #{net}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LiveGovementSituation">
+		SELECT 
+			<include refid="liveGovementSituationColumns"/>
+		FROM live_govement_situation a
+		<include refid="liveGovementSituationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO live_govement_situation(
+			id,
+			net,
+			net_situation
+		) VALUES (
+			#{id},
+			#{net},
+			#{netSituation}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE live_govement_situation SET 	
+			net = #{net},
+			net_situation = #{netSituation}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM live_govement_situation
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

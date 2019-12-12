@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csly.dao.TouristVolumeMonthDao">
+    
+	<sql id="touristVolumeMonthColumns">
+		a.id AS "id",
+		a.month AS "month",
+		a.year AS "year",
+		a.num AS "num"
+	</sql>
+	
+	<sql id="touristVolumeMonthJoins">
+	</sql>
+    
+	<select id="get" resultType="TouristVolumeMonth">
+		SELECT 
+			<include refid="touristVolumeMonthColumns"/>
+		FROM tourist_volume_month a
+		<include refid="touristVolumeMonthJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TouristVolumeMonth">
+		SELECT 
+			<include refid="touristVolumeMonthColumns"/>
+		FROM tourist_volume_month a
+		<include refid="touristVolumeMonthJoins"/>
+		<where>
+			
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TouristVolumeMonth">
+		SELECT 
+			<include refid="touristVolumeMonthColumns"/>
+		FROM tourist_volume_month a
+		<include refid="touristVolumeMonthJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tourist_volume_month(
+			id,
+			month,
+			year,
+			num
+		) VALUES (
+			#{id},
+			#{month},
+			#{year},
+			#{num}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tourist_volume_month SET 	
+			month = #{month},
+			year = #{year},
+			num = #{num}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tourist_volume_month
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

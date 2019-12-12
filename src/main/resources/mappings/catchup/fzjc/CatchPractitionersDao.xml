@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchPractitionersDao">
+    
+	<sql id="catchPractitionersColumns">
+		a.id AS "id",
+		a.address AS "address",
+		a.proportion AS "proportion"
+	</sql>
+	
+	<sql id="catchPractitionersJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchPractitioners">
+		SELECT 
+			<include refid="catchPractitionersColumns"/>
+		FROM catch_practitioners a
+		<include refid="catchPractitionersJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchPractitioners">
+		SELECT 
+			<include refid="catchPractitionersColumns"/>
+		FROM catch_practitioners a
+		<include refid="catchPractitionersJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchPractitioners">
+		SELECT 
+			<include refid="catchPractitionersColumns"/>
+		FROM catch_practitioners a
+		<include refid="catchPractitionersJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_practitioners(
+			id,
+			address,
+			proportion
+		) VALUES (
+			#{id},
+			#{address},
+			#{proportion}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_practitioners(
+			id,
+			address,
+			proportion
+		) VALUES  
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.address},
+			#{item.proportion}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_practitioners SET 	
+			address = #{address},
+			proportion = #{proportion}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_practitioners
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

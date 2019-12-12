@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.sjgl.dao.TcManagerInfoDao">
+    
+	<sql id="tcManagerInfoColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.phone AS "phone",
+		a.location AS "location",
+		a.role AS "role",
+		a.email AS "email"
+	</sql>
+	
+	<sql id="tcManagerInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="TcManagerInfo">
+		SELECT 
+			<include refid="tcManagerInfoColumns"/>
+		FROM tc_manager_info a
+		<include refid="tcManagerInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TcManagerInfo">
+		SELECT 
+			<include refid="tcManagerInfoColumns"/>
+		FROM tc_manager_info a
+		<include refid="tcManagerInfoJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TcManagerInfo">
+		SELECT 
+			<include refid="tcManagerInfoColumns"/>
+		FROM tc_manager_info a
+		<include refid="tcManagerInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tc_manager_info(
+			id,
+			name,
+			phone,
+			location,
+			role,
+			email
+		) VALUES (
+			#{id},
+			#{name},
+			#{phone},
+			#{location},
+			#{role},
+			#{email}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tc_manager_info SET 	
+			name = #{name},
+			phone = #{phone},
+			location = #{location},
+			role = #{role},
+			email = #{email}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tc_manager_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

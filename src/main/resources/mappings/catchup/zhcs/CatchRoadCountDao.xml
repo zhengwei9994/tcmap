@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchRoadCountDao">
+    
+	<sql id="catchRoadCountColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.road_type AS "roadType",
+		a.road_mileage AS "roadMileage"
+	</sql>
+	
+	<sql id="catchRoadCountJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchRoadCount">
+		SELECT 
+			<include refid="catchRoadCountColumns"/>
+		FROM catch_road_count a
+		<include refid="catchRoadCountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchRoadCount">
+		SELECT 
+			<include refid="catchRoadCountColumns"/>
+		FROM catch_road_count a
+		<include refid="catchRoadCountJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="roadType != null and roadType != ''">
+				AND a.road_type = #{roadType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchRoadCount">
+		SELECT 
+			<include refid="catchRoadCountColumns"/>
+		FROM catch_road_count a
+		<include refid="catchRoadCountJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_road_count(
+			id,
+			nyear,
+			road_type,
+			road_mileage
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{roadType},
+			#{roadMileage}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_road_count SET 	
+			nyear = #{nyear},
+			road_type = #{roadType},
+			road_mileage = #{roadMileage}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_road_count
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteAll">
+		DELETE FROM catch_road_count
+	</update>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_road_count(
+		id,
+		nyear,
+		road_type,
+		road_mileage
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id}, #{item.nyear},	#{item.roadType},#{item.roadMileage})
+		</foreach>
+	</insert>
+</mapper>

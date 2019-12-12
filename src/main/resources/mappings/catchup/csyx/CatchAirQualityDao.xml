@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchAirQualityDao">
+
+    <sql id="catchAirQualityDaoColumns">
+        a.id AS "id",
+        a.date AS "date",
+        a.number AS "number"
+    </sql>
+
+
+    <select id="get" resultType="CatchAirQuality">
+        SELECT
+        <include refid="catchAirQualityDaoColumns"/>
+        FROM catch_air_quality a
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="CatchAirQuality">
+        SELECT
+        <include refid="catchAirQualityDaoColumns"/>
+        FROM catch_air_quality a
+        <where>
+			<if test="date != null and date != ''">
+				AND a.date = #{date}
+			</if>
+		</where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}  asc
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="CatchAirQuality">
+        SELECT
+        <include refid="catchAirQualityDaoColumns"/>
+        FROM catch_air_quality a
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+        ORDER BY DATE ASC
+    </select>
+
+    <insert id="insert">
+        INSERT INTO catch_air_quality(
+        id,
+        date,
+        number
+        ) VALUES (
+        #{id},
+        #{date},
+        #{number}
+        )
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO catch_air_quality(
+        id,
+        date,
+        number
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.id},
+            #{item.date},
+            #{item.number}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update">
+        UPDATE catch_air_quality SET
+        date = #{date},
+        number = #{number}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        DELETE FROM catch_air_quality
+        WHERE id = #{id}
+    </update>
+
+
+</mapper>

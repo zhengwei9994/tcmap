@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.ShowTotalPopulationDao">
+    
+	<sql id="showTotalPopulationColumns">
+		a.id AS "id",
+		a.year AS "year",
+		a.total_num AS "totalNum",
+		a.old_num AS "oldNum",
+		a.labor_percent AS "laborPercent",
+		a.raise_percent AS "raisePercent"
+	</sql>
+	
+	<sql id="showTotalPopulationJoins">
+	</sql>
+    
+	<select id="get" resultType="ShowTotalPopulation">
+		SELECT 
+			<include refid="showTotalPopulationColumns"/>
+		FROM show_total_population a
+		<include refid="showTotalPopulationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShowTotalPopulation">
+		SELECT 
+			<include refid="showTotalPopulationColumns"/>
+		FROM show_total_population a
+		<include refid="showTotalPopulationJoins"/>
+		<where>
+			<if test="year != null and year != ''">
+				and a.YEAR = #{year}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.year desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShowTotalPopulation">
+		SELECT 
+			<include refid="showTotalPopulationColumns"/>
+		FROM show_total_population a
+		<include refid="showTotalPopulationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO show_total_population(
+			id,
+			year,
+			total_num,
+			old_num,
+			labor_percent,
+			raise_percent
+		) VALUES (
+			#{id},
+			#{year},
+			#{totalNum},
+			#{oldNum},
+			#{laborPercent},
+			#{raisePercent}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE show_total_population SET 	
+			year = #{year},
+			total_num = #{totalNum},
+			old_num = #{oldNum},
+			labor_percent = #{laborPercent},
+			raise_percent = #{raisePercent}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM show_total_population
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

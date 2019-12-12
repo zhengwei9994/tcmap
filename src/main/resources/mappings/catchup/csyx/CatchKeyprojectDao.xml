@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchKeyprojectDao">
+    
+	<sql id="catchKeyprojectColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.entry_name AS "entryName",
+		a.project_type AS "projectType",
+		a.total_investment AS "totalInvestment",
+		a.unit AS "unit"
+	</sql>
+	
+	<sql id="catchKeyprojectJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchKeyproject">
+		SELECT 
+			<include refid="catchKeyprojectColumns"/>
+		FROM catch_keyproject a
+		<include refid="catchKeyprojectJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchKeyproject">
+		SELECT 
+			<include refid="catchKeyprojectColumns"/>
+		FROM catch_keyproject a
+		<include refid="catchKeyprojectJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="entryName != null and entryName != ''">
+				AND a.entry_name = #{entryName}
+			</if>
+			<if test="projectType != null and projectType != ''">
+				AND a.project_type = #{projectType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchKeyproject">
+		SELECT 
+			<include refid="catchKeyprojectColumns"/>
+		FROM catch_keyproject a
+		<include refid="catchKeyprojectJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_keyproject(
+			id,
+			nyear,
+			entry_name,
+			project_type,
+			total_investment,
+			unit
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{entryName},
+			#{projectType},
+			#{totalInvestment},
+			#{unit}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_keyproject(
+		id,
+		nyear,
+		entry_name,
+		project_type,
+		total_investment,
+		unit
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.entryName},
+			#{item.projectType},
+			#{item.totalInvestment},
+			#{item.unit}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_keyproject SET 	
+			nyear = #{nyear},
+			entry_name = #{entryName},
+			project_type = #{projectType},
+			total_investment = #{totalInvestment},
+			unit = #{unit}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_keyproject
+		WHERE id = #{id}
+	</update>
+
+	<select id="keyprojectTypeData" resultType="CatchKeyproject">
+		select
+		a.nyear AS "nyear",
+		a.project_type AS "projectType",
+		ROUND(sum(a.total_investment)/10000,2) AS "totalInvestment"
+        FROM catch_keyproject  a
+         <where>
+			 <if test="nyear != null and nyear != ''">
+				 AND a.nyear = #{nyear}
+			 </if>
+		 </where>
+         GROUP BY a.project_type
+	</select>
+	
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.sjgl.dao.TcEventManagerDao">
+    
+	<sql id="tcEventManagerColumns">
+		a.id AS "id",
+		a.event_type AS "eventType",
+		a.event_number AS "eventNumber",
+		a.event_rate AS "eventRate",
+		a.event_personal AS "eventPersonal"
+	</sql>
+	
+	<sql id="tcEventManagerJoins">
+	</sql>
+    
+	<select id="get" resultType="TcEventManager">
+		SELECT 
+			<include refid="tcEventManagerColumns"/>
+		FROM tc_event_manager a
+		<include refid="tcEventManagerJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	<select id="findEventManager" resultType="TcEventManager">
+		SELECT
+		<include refid="tcEventManagerColumns"/>
+		FROM tc_event_manager a
+		GROUP BY
+		a.event_type
+	</select>
+	<select id="findList" resultType="TcEventManager">
+		SELECT 
+			<include refid="tcEventManagerColumns"/>
+		FROM tc_event_manager a
+		<include refid="tcEventManagerJoins"/>
+		<where>
+			<if test="eventType !=null and eventType !=''">
+                      a.event_type = #{eventType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TcEventManager">
+		SELECT 
+			<include refid="tcEventManagerColumns"/>
+		FROM tc_event_manager a
+		<include refid="tcEventManagerJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tc_event_manager(
+			id,
+			event_type,
+			event_number,
+			event_rate,
+			event_personal
+		) VALUES (
+			#{id},
+			#{eventType},
+			#{eventNumber},
+			#{eventRate},
+			#{eventPersonal}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tc_event_manager SET 	
+			event_type = #{eventType},
+			event_number = #{eventNumber},
+			event_rate = #{eventRate},
+			event_personal = #{eventPersonal}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tc_event_manager
+		WHERE id = #{id}
+	</update>
+	<update id="deleteByType">
+		DELETE FROM tc_event_manager
+		WHERE event_type = #{eventType}
+	</update>
+</mapper>

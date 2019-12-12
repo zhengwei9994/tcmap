@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchElectronicEvidenceDao">
+    
+	<sql id="catchElectronicEvidenceColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.month AS "month",
+		a.banking AS "banking",
+		a.house AS "house",
+		a.education AS "education",
+		a.medical AS "medical",
+		a.traffic AS "traffic",
+		a.travel AS "travel",
+		a.shop AS "shop"
+	</sql>
+	
+	<sql id="catchElectronicEvidenceJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchElectronicEvidence">
+		SELECT 
+			<include refid="catchElectronicEvidenceColumns"/>
+		FROM catch_electronic_evidence a
+		<include refid="catchElectronicEvidenceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchElectronicEvidence">
+		SELECT 
+			<include refid="catchElectronicEvidenceColumns"/>
+		FROM catch_electronic_evidence a
+		<include refid="catchElectronicEvidenceJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+		 ORDER BY  nyear ,MONTH ASC 
+	</select>
+	
+	<select id="findAllList" resultType="CatchElectronicEvidence">
+		SELECT 
+			<include refid="catchElectronicEvidenceColumns"/>
+		FROM catch_electronic_evidence a
+		<include refid="catchElectronicEvidenceJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_electronic_evidence(
+			id,
+			nyear,
+			month,
+			banking,
+			house,
+			education,
+			medical,
+			traffic,
+			travel,
+			shop
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{month},
+			#{banking},
+			#{house},
+			#{education},
+			#{medical},
+			#{traffic},
+			#{travel},
+			#{shop}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_electronic_evidence(
+			id,
+			nyear,
+			month,
+			banking,
+			house,
+			education,
+			medical,
+			traffic,
+			travel,
+			shop
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.nyear},
+			#{item.month},
+			#{item.banking},
+			#{item.house},
+			#{item.education},
+			#{item.medical},
+			#{item.traffic},
+			#{item.travel},
+			#{item.shop}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_electronic_evidence SET 	
+			nyear = #{nyear},
+			month = #{month},
+			banking = #{banking},
+			house = #{house},
+			education = #{education},
+			medical = #{medical},
+			traffic = #{traffic},
+			travel = #{travel},
+			shop = #{shop}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_electronic_evidence
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

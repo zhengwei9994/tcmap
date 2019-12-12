@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.ShowQualityifeDao">
+    
+	<sql id="showQualityifeColumns">
+		a.id AS "id",
+		a.index_name AS "indexName",
+		a.index_num AS "indexNum",
+		a.index_increase AS "indexIncrease",
+		a.year AS "year",
+		a.MONTH AS "month"
+	</sql>
+	
+	<sql id="showQualityifeJoins">
+	</sql>
+    
+	<select id="get" resultType="ShowQualityife">
+		SELECT 
+			<include refid="showQualityifeColumns"/>
+		FROM show_qualityife a
+		<include refid="showQualityifeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShowQualityife">
+		SELECT 
+			<include refid="showQualityifeColumns"/>
+		FROM show_qualityife a
+		<include refid="showQualityifeJoins"/>
+		<where>
+			
+			<if test="indexName != null and indexName != ''">
+				AND a.index_name = #{indexName}
+			</if>
+			<if test="year != null and year != ''">
+				and a.year = #{year}
+			</if>
+			<if test="month != null and month != ''">
+				and a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.year desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShowQualityife">
+		SELECT 
+			<include refid="showQualityifeColumns"/>
+		FROM show_qualityife a
+		<include refid="showQualityifeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO show_qualityife(
+			id,
+			index_name,
+			index_num,
+			index_increase,
+			year,
+			month
+		) VALUES (
+			#{id},
+			#{indexName},
+			#{indexNum},
+			#{indexIncrease},
+			#{year},
+			#{month}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE show_qualityife SET 	
+			index_name = #{indexName},
+			index_num = #{indexNum},
+			index_increase = #{indexIncrease},
+			year = #{year},
+			month = #{month}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM show_qualityife
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

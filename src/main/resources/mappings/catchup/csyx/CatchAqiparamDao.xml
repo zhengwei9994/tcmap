@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchAqiparamDao">
+    
+	<sql id="catchAqiparamColumns">
+		a.id AS "id",
+		a.area_name AS "areaName",
+		a.aqi AS "aqi",
+		a.aqilevel AS "aqilevel",
+		a.rank AS "rank"
+	</sql>
+	
+	<sql id="catchAqiparamJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchAqiparam">
+		SELECT 
+			<include refid="catchAqiparamColumns"/>
+		FROM catch_aqiparam a
+		<include refid="catchAqiparamJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchAqiparam">
+		SELECT 
+			<include refid="catchAqiparamColumns"/>
+		FROM catch_aqiparam a
+		<include refid="catchAqiparamJoins"/>
+		<where>
+			<if test="areaName != null and areaName != ''">
+				AND a.area_name = #{areaName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchAqiparam">
+		SELECT 
+			<include refid="catchAqiparamColumns"/>
+		FROM catch_aqiparam a
+		<include refid="catchAqiparamJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_aqiparam(
+			id,
+			area_name,
+			aqi,
+			aqilevel,
+			rank
+		) VALUES (
+			#{id},
+			#{areaName},
+			#{aqi},
+			#{aqilevel},
+			#{rank}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_aqiparam SET
+			area_name = #{areaName},
+			aqi = #{aqi},
+			aqilevel = #{aqilevel},
+			rank = #{rank}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_aqiparam
+		WHERE id = #{id}
+	</update>
+	<select id="aqiparamData" resultType="CatchAqiparam">
+		SELECT
+			a.area_name AS "areaName",
+			a.aqi AS "aqi",
+			a.aqilevel AS "aqilevel",
+			a.rank AS "rank"
+			FROM catch_aqiparam a
+			ORDER BY a.rank
+	</select>
+</mapper>

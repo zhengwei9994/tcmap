@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchShakePovertyDao">
+    
+	<sql id="catchShakePovertyColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.area_name AS "areaName",
+		a.out_poverty AS "outPoverty",
+		a.total_people AS "totalPeople",
+		a.reasons_alleviation AS "reasonsAlleviation",
+		a.poor_households AS "poorHouseholds"
+	</sql>
+	
+	<sql id="catchShakePovertyJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchShakePoverty">
+		SELECT 
+			<include refid="catchShakePovertyColumns"/>
+		FROM catch_shake_poverty a
+		<include refid="catchShakePovertyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchShakePoverty">
+		SELECT 
+			<include refid="catchShakePovertyColumns"/>
+		FROM catch_shake_poverty a
+		<include refid="catchShakePovertyJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="areaName != null and areaName != ''">
+				AND a.area_name = #{areaName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchShakePoverty">
+		SELECT 
+			<include refid="catchShakePovertyColumns"/>
+		FROM catch_shake_poverty a
+		<include refid="catchShakePovertyJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_shake_poverty(
+			id,
+			nyear,
+			area_name,
+			out_poverty,
+			total_people,
+			reasons_alleviation,
+			poor_households
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{areaName},
+			#{outPoverty},
+			#{totalPeople},
+			#{reasonsAlleviation},
+			#{poorHouseholds}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_shake_poverty(
+		id,
+		nyear,
+		area_name,
+		out_poverty,
+		total_people,
+		reasons_alleviation,
+		poor_households
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.areaName},
+			#{item.outPoverty},
+			#{item.totalPeople},
+			#{item.reasonsAlleviation},
+			#{item.poorHouseholds}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_shake_poverty SET 	
+			nyear = #{nyear},
+			area_name = #{areaName},
+			out_poverty = #{outPoverty},
+			total_people = #{totalPeople},
+			reasons_alleviation = #{reasonsAlleviation},
+			poor_households = #{poorHouseholds}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_shake_poverty
+		WHERE id = #{id}
+	</update>
+	<select id="populationData" resultType="java.util.HashMap">
+		SELECT
+		a.nyear AS "nyear",
+		sum(a.out_poverty) AS "outPoverty",
+		(sum(a.out_poverty)/(sum(a.out_poverty)+sum(a.total_people)))*100 AS "zhanbi",
+		sum(a.poor_households) AS "poorHouseholds"
+		FROM catch_shake_poverty a
+		<where>
+		<if test="nyear != null and nyear != ''">
+			AND a.nyear = #{nyear}
+		</if>
+		</where>
+	</select>
+	<select id="histogramData" resultType="CatchShakePoverty">
+		SELECT
+		a.nyear AS "nyear",
+		a.area_name As "areaName",
+		a.out_poverty AS "outPoverty",
+		a.poor_households AS "poorHouseholds"
+		FROM catch_shake_poverty a
+		<where>
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+	</select>
+</mapper>

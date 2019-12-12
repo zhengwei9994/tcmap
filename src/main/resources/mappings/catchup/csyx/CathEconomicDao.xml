@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CathEconomicDao">
+    
+	<sql id="cathEconomicColumns">
+		a.id AS "id",
+		a.index_id AS "indexId.id",
+		a.nyear AS "nyear",
+		a.quarter AS "quarter",
+		a.indicators AS "indicators",
+		a.indicators_unit AS "indicatorsUnit",
+		a.growth AS "growth",
+		b.name AS "indexId.name"
+	</sql>
+	
+	<sql id="cathEconomicJoins">
+		LEFT JOIN catch_index_name b ON b.id = a.index_id
+	</sql>
+    
+	<select id="get" resultType="CathEconomic">
+		SELECT 
+			<include refid="cathEconomicColumns"/>
+		FROM cath_economic a
+		<include refid="cathEconomicJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CathEconomic">
+		SELECT 
+			<include refid="cathEconomicColumns"/>
+		FROM cath_economic a
+		<include refid="cathEconomicJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="quarter != null and quarter != ''">
+				AND a.quarter = #{quarter}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CathEconomic">
+		SELECT 
+			<include refid="cathEconomicColumns"/>
+		FROM cath_economic a
+		<include refid="cathEconomicJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cath_economic(
+			id,
+			index_id,
+			nyear,
+			quarter,
+			indicators,
+			indicators_unit,
+			growth
+		) VALUES (
+			#{id},
+			#{indexId.id},
+			#{nyear},
+			#{quarter},
+			#{indicators},
+			#{indicatorsUnit},
+			#{growth}
+		)
+	</insert>
+
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO cath_economic(
+		id,
+		index_id,
+		nyear,
+		quarter,
+		indicators,
+		indicators_unit,
+		growth
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.indexId.id},
+			#{item.nyear},
+			#{item.quarter},
+			#{item.indicators},
+			#{item.indicatorsUnit},
+			#{item.growth}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE cath_economic SET 	
+			index_id = #{indexId.id},
+			nyear = #{nyear},
+			quarter = #{quarter},
+			indicators = #{indicators},
+			indicators_unit = #{indicatorsUnit},
+			growth = #{growth}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cath_economic
+		WHERE id = #{id}
+	</update>
+
+	<select id="jjzbData" resultType="CathEconomic">
+		select
+		a.nyear AS "nyear",
+		sum(a.indicators) AS "indicators",
+		a.indicators_unit AS "indicatorsUnit",
+		sum(a.growth) AS "growth",
+		a2.name AS "indexId.name",
+		a2.name_en AS "indexId.nameEn"
+		from  cath_economic a
+		LEFT JOIN catch_index_name a2 ON a2.id = a.index_id
+		<where>
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+	   GROUP BY a2.name
+	</select>
+	
+</mapper>

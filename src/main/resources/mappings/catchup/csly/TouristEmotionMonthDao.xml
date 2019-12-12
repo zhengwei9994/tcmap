@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csly.dao.TouristEmotionMonthDao">
+    
+	<sql id="touristEmotionMonthColumns">
+		a.id AS "id",
+		a.source AS "source",
+		a.state AS "state",
+		a.num AS "num"
+	</sql>
+	
+	<sql id="touristEmotionMonthJoins">
+	</sql>
+    
+	<select id="get" resultType="TouristEmotionMonth">
+		SELECT 
+			<include refid="touristEmotionMonthColumns"/>
+		FROM tourist_emotion_month a
+		<include refid="touristEmotionMonthJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TouristEmotionMonth">
+		SELECT 
+			<include refid="touristEmotionMonthColumns"/>
+		FROM tourist_emotion_month a
+		<include refid="touristEmotionMonthJoins"/>
+		<where>
+			
+			<if test="source != null and source != ''">
+				AND a.source = #{source}
+			</if>
+			<if test="state != null and state != ''">
+				AND a.state = #{state}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TouristEmotionMonth">
+		SELECT 
+			<include refid="touristEmotionMonthColumns"/>
+		FROM tourist_emotion_month a
+		<include refid="touristEmotionMonthJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tourist_emotion_month(
+			id,
+			source,
+			state,
+			num
+		) VALUES (
+			#{id},
+			#{source},
+			#{state},
+			#{num}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tourist_emotion_month SET 	
+			source = #{source},
+			state = #{state},
+			num = #{num}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tourist_emotion_month
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

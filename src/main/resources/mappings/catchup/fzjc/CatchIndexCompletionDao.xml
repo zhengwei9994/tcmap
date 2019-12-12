@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchIndexCompletionDao">
+    
+	<sql id="catchIndexCompletionColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.index_type AS "indexType",
+		a.index_name AS "indexName",
+		a.completion_rate AS "completionRate"
+	</sql>
+	
+	<sql id="catchIndexCompletionJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchIndexCompletion">
+		SELECT 
+			<include refid="catchIndexCompletionColumns"/>
+		FROM catch_index_completion a
+		<include refid="catchIndexCompletionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchIndexCompletion">
+		SELECT 
+			<include refid="catchIndexCompletionColumns"/>
+		FROM catch_index_completion a
+		<include refid="catchIndexCompletionJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="indexType != null and indexType != ''">
+				AND a.index_type = #{indexType}
+			</if>
+			<if test="indexName != null and indexName != ''">
+				AND a.index_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{indexName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{indexName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{indexName},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="groupByindexType" resultType="CatchIndexCompletion">
+		SELECT
+		<include refid="catchIndexCompletionColumns"/>
+		FROM catch_index_completion a
+		<include refid="catchIndexCompletionJoins"/>
+		<where>
+
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+		GROUP BY index_type
+	</select>
+	
+	<select id="findAllList" resultType="CatchIndexCompletion">
+		SELECT 
+			<include refid="catchIndexCompletionColumns"/>
+		FROM catch_index_completion a
+		<include refid="catchIndexCompletionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_index_completion(
+			id,
+			nyear,
+			index_type,
+			index_name,
+			completion_rate
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{indexType},
+			#{indexName},
+			#{completionRate}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_index_completion(
+			id,
+			nyear,
+			index_type,
+			index_name,
+			completion_rate
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.indexType},
+			#{item.indexName},
+			#{item.completionRate}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_index_completion SET 	
+			nyear = #{nyear},
+			index_type = #{indexType},
+			index_name = #{indexName},
+			completion_rate = #{completionRate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_index_completion
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

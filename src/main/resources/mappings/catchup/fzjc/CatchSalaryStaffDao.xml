@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchSalaryStaffDao">
+    
+	<sql id="catchSalaryStaffColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.statistical_content AS "statisticalContent",
+		a.numerical_value AS "numericalValue",
+		a.unti AS "unti",
+		a.growth_rate AS "growthRate"
+	</sql>
+	
+	<sql id="catchSalaryStaffJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchSalaryStaff">
+		SELECT 
+			<include refid="catchSalaryStaffColumns"/>
+		FROM catch_salary_staff a
+		<include refid="catchSalaryStaffJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchSalaryStaff">
+		SELECT 
+			<include refid="catchSalaryStaffColumns"/>
+		FROM catch_salary_staff a
+		<include refid="catchSalaryStaffJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="statisticalContent != null and statisticalContent != ''">
+				AND a.statistical_content = #{statisticalContent}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchSalaryStaff">
+		SELECT 
+			<include refid="catchSalaryStaffColumns"/>
+		FROM catch_salary_staff a
+		<include refid="catchSalaryStaffJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_salary_staff(
+			id,
+			nyear,
+			statistical_content,
+			numerical_value,
+			unti,
+			growth_rate
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{statisticalContent},
+			#{numericalValue},
+			#{unti},
+			#{growthRate}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_salary_staff(
+			id,
+			nyear,
+			statistical_content,
+			numerical_value,
+			unti,
+			growth_rate
+		) VALUES  
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.nyear},
+			#{item.statisticalContent},
+			#{item.numericalValue},
+			#{item.unti},
+			#{item.growthRate}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_salary_staff SET 	
+			nyear = #{nyear},
+			statistical_content = #{statisticalContent},
+			numerical_value = #{numericalValue},
+			unti = #{unti},
+			growth_rate = #{growthRate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_salary_staff
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

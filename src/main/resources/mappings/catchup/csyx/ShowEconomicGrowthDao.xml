@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.ShowEconomicGrowthDao">
+    
+	<sql id="showEconomicGrowthColumns">
+		a.id AS "id",
+		a.population AS "population",
+		a.population_increase AS "populationIncrease",
+		a.capita AS "capita",
+		a.capita_increase AS "capitaIncrease",
+		a.revenue AS "revenue",
+		a.revenue_increase AS "revenueIncrease",
+		a.year AS "year",
+		a.month AS "month"
+	</sql>
+	
+	<sql id="showEconomicGrowthJoins">
+	</sql>
+    
+	<select id="get" resultType="ShowEconomicGrowth">
+		SELECT 
+			<include refid="showEconomicGrowthColumns"/>
+		FROM show_economic_growth a
+		<include refid="showEconomicGrowthJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShowEconomicGrowth">
+		SELECT 
+			<include refid="showEconomicGrowthColumns"/>
+		FROM show_economic_growth a
+		<include refid="showEconomicGrowthJoins"/>
+		<where>
+			
+			<if test="population != null and population != ''">
+				AND a.population = #{population}
+			</if>
+			<if test="populationIncrease != null and populationIncrease != ''">
+				AND a.population_increase = #{populationIncrease}
+			</if>
+			<if test="capita != null and capita != ''">
+				AND a.capita = #{capita}
+			</if>
+			<if test="capitaIncrease != null and capitaIncrease != ''">
+				AND a.capita_increase = #{capitaIncrease}
+			</if>
+			<if test="revenue != null and revenue != ''">
+				AND a.revenue = #{revenue}
+			</if>
+			<if test="revenueIncrease != null and revenueIncrease != ''">
+				AND a.revenue_increase = #{revenueIncrease}
+			</if>
+			<if test="year != null and year != ''">
+				and a.year = #{year}
+			</if>
+			<if test="month != null and month != ''">
+				and a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.year desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShowEconomicGrowth">
+		SELECT 
+			<include refid="showEconomicGrowthColumns"/>
+		FROM show_economic_growth a
+		<include refid="showEconomicGrowthJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO show_economic_growth(
+			id,
+			population,
+			population_increase,
+			capita,
+			capita_increase,
+			revenue,
+			revenue_increase,
+			year,
+			month
+		) VALUES (
+			#{id},
+			#{population},
+			#{populationIncrease},
+			#{capita},
+			#{capitaIncrease},
+			#{revenue},
+			#{revenueIncrease},
+			#{year},
+			#{month}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE show_economic_growth SET 	
+			population = #{population},
+			population_increase = #{populationIncrease},
+			capita = #{capita},
+			capita_increase = #{capitaIncrease},
+			revenue = #{revenue},
+			revenue_increase = #{revenueIncrease},
+			year = #{year},
+			month = #{month}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM show_economic_growth
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.ShowVitalityAreaDao">
+    
+	<sql id="showVitalityAreaColumns">
+		a.id AS "id",
+		a.area AS "area",
+		a.year AS "year",
+		a.vitality AS "vitality",
+		a.MONTH as "month"
+	</sql>
+	
+	<sql id="showVitalityAreaJoins">
+	</sql>
+    
+	<select id="get" resultType="ShowVitalityArea">
+		SELECT 
+			<include refid="showVitalityAreaColumns"/>
+		FROM show_vitality_area a
+		<include refid="showVitalityAreaJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShowVitalityArea">
+		SELECT 
+			<include refid="showVitalityAreaColumns"/>
+		FROM show_vitality_area a
+		<include refid="showVitalityAreaJoins"/>
+		<where>
+			
+			<if test="area != null and area != ''">
+				AND a.area = #{area}
+			</if>
+			<if test="year != null and year != ''">
+				and a.year = #{year}
+			</if>
+			<if test="month != null and month != ''">
+				and a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShowVitalityArea">
+		SELECT 
+			<include refid="showVitalityAreaColumns"/>
+		FROM show_vitality_area a
+		<include refid="showVitalityAreaJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.year desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO show_vitality_area(
+			id,
+			area,
+			year,
+			vitality,
+			month
+		) VALUES (
+			#{id},
+			#{area},
+			#{year},
+			#{vitality},
+			#{month }
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE show_vitality_area SET 	
+			area = #{area},
+			year = #{year},
+			vitality = #{vitality},
+			month=#{month}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM show_vitality_area
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

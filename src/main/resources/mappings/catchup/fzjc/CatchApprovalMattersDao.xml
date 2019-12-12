@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchApprovalMattersDao">
+    
+	<sql id="catchApprovalMattersColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.department AS "department",
+		a.matters_count AS "mattersCount"
+	</sql>
+	
+	<sql id="catchApprovalMattersJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchApprovalMatters">
+		SELECT 
+			<include refid="catchApprovalMattersColumns"/>
+		FROM catch_approval_matters a
+		<include refid="catchApprovalMattersJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchApprovalMatters">
+		SELECT 
+			<include refid="catchApprovalMattersColumns"/>
+		FROM catch_approval_matters a
+		<include refid="catchApprovalMattersJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="department != null and department != ''">
+				AND a.department = #{department}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchApprovalMatters">
+		SELECT 
+			<include refid="catchApprovalMattersColumns"/>
+		FROM catch_approval_matters a
+		<include refid="catchApprovalMattersJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_approval_matters(
+			id,
+			nyear,
+			department,
+			matters_count
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{department},
+			#{mattersCount}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_approval_matters(
+			id,
+			nyear,
+			department,
+			matters_count
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.department},
+			#{item.mattersCount}
+		    )
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_approval_matters SET 	
+			nyear = #{nyear},
+			department = #{department},
+			matters_count = #{mattersCount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_approval_matters
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.sjgl.dao.TcEventDetailDao">
+    
+	<sql id="tcEventDetailColumns">
+		a.id AS "id",
+		a.type AS "type",
+		a.source AS "source",
+		a.rate AS "rate",
+		a.event_content AS "eventContent",
+		a.completion AS "completion",
+		a.event_id AS "eventId",
+		a.event_person AS "eventPerson",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.create_user AS "createUser"
+	</sql>
+	
+	<sql id="tcEventDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="TcEventDetail">
+		SELECT 
+			<include refid="tcEventDetailColumns"/>
+		FROM tc_event_detail a
+		<include refid="tcEventDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	<select id="findEventType" resultType="TcEventDetail">
+		SELECT
+		<include refid="tcEventDetailColumns"/>
+		FROM tc_event_detail a
+		GROUP BY
+		a.type
+	</select>
+	<select id="findList" resultType="TcEventDetail">
+		SELECT 
+			<include refid="tcEventDetailColumns"/>
+		FROM tc_event_detail a
+		<include refid="tcEventDetailJoins"/>
+		<where>
+			
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="eventPerson != null and eventPerson != ''">
+				AND a.event_person = #{eventPerson}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TcEventDetail">
+		SELECT 
+			<include refid="tcEventDetailColumns"/>
+		FROM tc_event_detail a
+		<include refid="tcEventDetailJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tc_event_detail(
+			id,
+			type,
+			source,
+			rate,
+			event_content,
+			completion,
+			event_id,
+			event_person,
+			create_time,
+			update_time,
+			create_user
+		) VALUES (
+			#{id},
+			#{type},
+			#{source},
+			#{rate},
+			#{eventContent},
+			#{completion},
+			#{eventId},
+			#{eventPerson},
+			#{createTime},
+			#{updateTime},
+			#{createUser}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tc_event_detail SET 	
+			type = #{type},
+			source = #{source},
+			rate = #{rate},
+			event_content = #{eventContent},
+			completion = #{completion},
+			event_id = #{eventId},
+			event_person = #{eventPerson},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			create_user = #{createUser}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tc_event_detail
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

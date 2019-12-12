@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchEnergyConsumptionDao">
+    
+	<sql id="catchEnergyConsumptionColumns">
+		a.id AS "id",
+		a.year AS "year",
+		a.quarter AS "quarter",
+		a.energy_consumption AS "energyConsumption",
+		a.energy_consumption_rate AS "energyConsumptionRate"
+	</sql>
+	
+	<sql id="catchEnergyConsumptionJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchEnergyConsumption">
+		SELECT 
+			<include refid="catchEnergyConsumptionColumns"/>
+		FROM catch_energy_consumption a
+		<include refid="catchEnergyConsumptionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchEnergyConsumption">
+		SELECT 
+			<include refid="catchEnergyConsumptionColumns"/>
+		FROM catch_energy_consumption a
+		<include refid="catchEnergyConsumptionJoins"/>
+		<where>
+			
+			<if test="year != null and year != ''">
+				AND a.year = #{year}
+			</if>
+			<if test="quarter != null and quarter != ''">
+				AND a.quarter = #{quarter}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY quarter
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchEnergyConsumption">
+		SELECT 
+			<include refid="catchEnergyConsumptionColumns"/>
+		FROM catch_energy_consumption a
+		<include refid="catchEnergyConsumptionJoins"/>
+		<where>
+
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_energy_consumption(
+			id,
+			year,
+			quarter,
+			energy_consumption,
+			energy_consumption_rate
+		) VALUES (
+			#{id},
+			#{year},
+			#{quarter},
+			#{energyConsumption},
+			#{energyConsumptionRate}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_energy_consumption(
+			id,
+			year,
+			quarter,
+			energy_consumption,
+			energy_consumption_rate
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.year},
+			#{item.quarter},
+			#{item.energyConsumption},
+			#{item.energyConsumptionRate}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_energy_consumption SET 	
+			year = #{year},
+			quarter = #{quarter},
+			energy_consumption = #{energyConsumption},
+			energy_consumption_rate = #{energyConsumptionRate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_energy_consumption
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

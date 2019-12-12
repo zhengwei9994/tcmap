@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csly.dao.TouristTimeNegativeDao">
+    
+	<sql id="touristTimeNegativeColumns">
+		a.id AS "id",
+		a.abstracts AS "abstracts",
+		a.date AS "date",
+		a.source AS "source",
+		a.scenic AS "scenic"
+	</sql>
+	
+	<sql id="touristTimeNegativeJoins">
+	</sql>
+    
+	<select id="get" resultType="TouristTimeNegative">
+		SELECT 
+			<include refid="touristTimeNegativeColumns"/>
+		FROM tourist_time_negative a
+		<include refid="touristTimeNegativeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TouristTimeNegative">
+		SELECT 
+			<include refid="touristTimeNegativeColumns"/>
+		FROM tourist_time_negative a
+		<include refid="touristTimeNegativeJoins"/>
+		<where>
+			
+			<if test="scenic != null and scenic != ''">
+				AND a.scenic = #{scenic}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TouristTimeNegative">
+		SELECT 
+			<include refid="touristTimeNegativeColumns"/>
+		FROM tourist_time_negative a
+		<include refid="touristTimeNegativeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tourist_time_negative(
+			id,
+			abstracts,
+			date,
+			source,
+			scenic
+		) VALUES (
+			#{id},
+			#{abstracts},
+			#{date},
+			#{source},
+			#{scenic}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tourist_time_negative SET 	
+			abstracts = #{abstracts},
+			date = #{date},
+			source = #{source},
+			scenic = #{scenic}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tourist_time_negative
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

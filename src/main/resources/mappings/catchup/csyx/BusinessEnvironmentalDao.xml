@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.BusinessEnvironmentalDao">
+    
+	<sql id="businessEnvironmentalColumns">
+		a.id AS "id",
+		a.index AS "index",
+		a.num AS "num",
+		a.max AS "max",
+		a.month as "month",
+		a.year AS "year"
+	</sql>
+	
+	<sql id="businessEnvironmentalJoins">
+	</sql>
+    
+	<select id="get" resultType="BusinessEnvironmental">
+		SELECT 
+			<include refid="businessEnvironmentalColumns"/>
+		FROM business_environmental a
+		<include refid="businessEnvironmentalJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BusinessEnvironmental">
+		SELECT 
+			<include refid="businessEnvironmentalColumns"/>
+		FROM business_environmental a
+		<include refid="businessEnvironmentalJoins"/>
+		<where>
+			
+			<if test="index != null and index != ''">
+				AND a.index = #{index}
+			</if>
+			<if test="year != null and year != ''">
+				and a.YEAR =${year}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY `year` desc,`month`
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BusinessEnvironmental">
+		SELECT 
+			<include refid="businessEnvironmentalColumns"/>
+		FROM business_environmental a
+		<include refid="businessEnvironmentalJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO business_environmental(
+			id,
+			`index`,
+			num,
+			max,
+			`month`,
+			`year`
+		) VALUES (
+			#{id},
+			#{index},
+			#{num},
+			#{max},
+			#{month},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE business_environmental SET 	
+			`index` = #{index},
+			num = #{num},
+			max = #{max},
+			`month` = #{month},
+			year = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM business_environmental
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

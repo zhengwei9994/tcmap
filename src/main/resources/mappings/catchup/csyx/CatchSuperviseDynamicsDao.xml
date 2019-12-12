@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchSuperviseDynamicsDao">
+    
+	<sql id="catchSuperviseDynamicsColumn">
+		a.id AS "id",
+		a.project_name "projectName",
+		a.content AS "content",
+		a.create_time AS "createTime",
+		a.has_read AS "hasRead"
+	</sql>
+
+	<resultMap id="userMap" type="cn.xy.tcmap.modules.sys.entity.User">
+		<id column="user.id" jdbcType="VARCHAR" property="id"/>
+		<result column="user.name" jdbcType="VARCHAR" property="name"/>
+		<result column="user.photo" jdbcType="VARCHAR" property="photo"/>
+	</resultMap>
+
+	<resultMap id="catchProjectConstructionMap" type="cn.xy.tcmap.modules.catchup.csyx.entity.CatchProjectConstruction">
+		<id column="catchProjectConstruction.id" jdbcType="VARCHAR" property="id"/>
+		<result column="catchProjectConstruction.projectName" jdbcType="VARCHAR" property="projectName"/>
+	</resultMap>
+
+	<resultMap id="BaseResultMap" type="cn.xy.tcmap.modules.catchup.csyx.entity.CatchSuperviseDynamic">
+		<id column="id" jdbcType="VARCHAR" property="id"/>
+		<result column="content" jdbcType="VARCHAR" property="content"/>
+		<result column="projectName" jdbcType="VARCHAR" property="projectName"/>
+		<result column="create_time" jdbcType="VARCHAR" property="createTime"/>
+		<result column="has_read" jdbcType="VARCHAR" property="hasRead"/>
+		<result column="hasReadLabel" jdbcType="VARCHAR" property="hasReadLabel"/>
+		<association property="catchProjectConstruction"  javaType="cn.xy.tcmap.modules.catchup.csyx.entity.CatchProjectConstruction" resultMap="catchProjectConstructionMap"/>
+		<association property="user"  javaType="cn.xy.tcmap.modules.sys.entity.User" resultMap="userMap"/>
+	</resultMap>
+	
+	<sql id="catchSuperviseDynamicsJoins">
+
+	</sql>
+    
+	<select id="get" resultType="CatchSuperviseDynamic">
+		SELECT 
+			<include refid="catchSuperviseDynamicsColumn"/>,
+		u.id AS "user.id",
+		u.name AS "user.name"
+		FROM catch_supervise_dynamics a
+		LEFT JOIN sys_user u ON a.user_id = u.id
+		<include refid="catchSuperviseDynamicsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchSuperviseDynamic">
+		SELECT 
+			<include refid="catchSuperviseDynamicsColumn"/>,
+		u.id AS "user.id",
+		u.name AS "user.name"
+		FROM catch_supervise_dynamics a
+		LEFT JOIN sys_user u ON a.user_id = u.id
+		<include refid="catchSuperviseDynamicsJoins"/>
+		<where>
+			<if test="content != null and content != ''">
+				AND a.content LIKE CONCAT('%',#{content},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}  desc
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchSuperviseDynamic">
+		SELECT 
+			<include refid="catchSuperviseDynamicsColumn"/>
+		FROM catch_supervise_dynamics a
+		<include refid="catchSuperviseDynamicsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy} 
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_supervise_dynamics (
+			id ,
+			project_name,
+			content,
+			create_time ,
+			has_read,
+			user_id
+		) VALUES (
+			#{id},
+			#{projectName},
+			#{content},
+			#{createTime},
+			#{hasRead},
+			#{user.id}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_supervise_dynamics (
+		id ,
+		project_name,
+		content,
+		create_time ,
+		has_read,
+		user_id
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.projectName},
+			#{item.content},
+			#{item.createTime},
+			#{item.hasRead},
+			#{item.user.id}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_supervise_dynamics SET
+			project_name  = #{projectName},
+			content = #{content},
+			create_time = #{createTime},
+			has_read   = #{hasRead}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_supervise_dynamics
+		WHERE id = #{id}
+	</update>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		SELECT
+		<include refid="catchSuperviseDynamicsColumn"/>,
+		u.id AS "user.id",
+		u.name AS "user.name",
+		u.photo AS "user.photo",
+		d.label AS "hasReadLabel",
+		a.project_name AS "projectName" 
+<!-- 		pc.id as "catchProjectConstruction.id", -->
+<!-- 		pc.project_name as "catchProjectConstruction.projectName" -->
+		FROM catch_supervise_dynamics a
+		LEFT JOIN sys_user u ON a.user_id = u.id
+	<!-- 	LEFT JOIN catch_project_construction pc ON pc.id = a.project_id -->
+		LEFT JOIN sys_dict d ON d.value = a.has_read AND d.type = 'has_read'
+		<where>
+			<if test="content != null and content != ''">
+				AND a.content LIKE CONCAT('%',#{content},'%')
+			</if>
+		</where>
+		ORDER BY a.create_time desc
+	</select>
+
+</mapper>

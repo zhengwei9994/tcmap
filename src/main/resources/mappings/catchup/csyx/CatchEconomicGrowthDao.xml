@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchEconomicGrowthDao">
+    
+	<sql id="catchEconomicGrowthColumns">
+		a.id AS "id",
+		a.index_id AS "index_id",
+		a.nyear AS "nyear",
+		a.indicators AS "indicators",
+		a.indicators_unit AS "indicatorsUnit",
+		a.rate AS "rate",
+		b.name AS "indexName",
+		a.area_name "areaName",
+		b.name_en "nameEn",
+		c.lon "lon",
+		c.lat "lat"
+	</sql>
+	
+	<sql id="catchEconomicGrowthJoins">
+	    LEFT JOIN catch_index_name b ON b.id = a.index_id
+	    LEFT JOIN catch_area_position c ON c.area_name =a.area_name
+	</sql>
+    
+	<select id="get" resultType="CatchEconomicGrowth">
+		SELECT 
+			<include refid="catchEconomicGrowthColumns"/>
+		FROM catch_economic_growth a
+		<include refid="catchEconomicGrowthJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchEconomicGrowth">
+		SELECT 
+			<include refid="catchEconomicGrowthColumns"/>
+		FROM catch_economic_growth a
+		<include refid="catchEconomicGrowthJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="areaName != null and areaName != ''">
+				AND a.area_name = #{areaName}
+			</if>
+			<if test="indexId != null and indexId != ''">
+				AND a.index_id = #{indexId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchEconomicGrowth">
+		SELECT 
+			<include refid="catchEconomicGrowthColumns"/>
+		FROM catch_economic_growth a
+		<include refid="catchEconomicGrowthJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_economic_growth(
+			id,
+			index_id,
+			nyear,
+			area_name,
+			indicators,
+			indicators_unit,
+			rate
+		) VALUES (
+			#{id},
+			#{indexId},
+			#{nyear},
+			#{areaName},
+			#{indicators},
+			#{indicatorsUnit},
+			#{rate}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_economic_growth(
+			id,
+			index_id,
+			nyear,
+			area_name,
+			indicators,
+			indicators_unit,
+			rate
+		) VALUES 
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.indexId},
+			#{item.nyear},
+			#{item.areaName},
+			#{item.indicators},
+			#{item.indicatorsUnit},
+			#{item.rate}
+		  )
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_economic_growth SET 	
+			index_id = #{indexId},
+			nyear = #{nyear},
+			area_name = #{areaName},
+			indicators = #{indicators},
+			indicators_unit = #{indicatorsUnit},
+			rate = #{rate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_economic_growth
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

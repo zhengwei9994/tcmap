@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csly.dao.TouristSentimentTrendDao">
+    
+	<sql id="touristSentimentTrendColumns">
+		a.id AS "id",
+		a.month AS "month",
+		a.num AS "num",
+		a.year AS "year"
+	</sql>
+	
+	<sql id="touristSentimentTrendJoins">
+	</sql>
+    
+	<select id="get" resultType="TouristSentimentTrend">
+		SELECT 
+			<include refid="touristSentimentTrendColumns"/>
+		FROM tourist_sentiment_trend a
+		<include refid="touristSentimentTrendJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TouristSentimentTrend">
+		SELECT 
+			<include refid="touristSentimentTrendColumns"/>
+		FROM tourist_sentiment_trend a
+		<include refid="touristSentimentTrendJoins"/>
+		<where>
+			
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+			<if test="year != null and year != ''">
+				AND a.year = #{year}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TouristSentimentTrend">
+		SELECT 
+			<include refid="touristSentimentTrendColumns"/>
+		FROM tourist_sentiment_trend a
+		<include refid="touristSentimentTrendJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tourist_sentiment_trend(
+			id,
+			month,
+			num,
+			year
+		) VALUES (
+			#{id},
+			#{month},
+			#{num},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tourist_sentiment_trend SET 	
+			month = #{month},
+			num = #{num},
+			year = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tourist_sentiment_trend
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

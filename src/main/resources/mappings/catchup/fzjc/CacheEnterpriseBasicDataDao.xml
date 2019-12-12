@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CacheEnterpriseBasicDataDao">
+    
+	<sql id="cacheEnterpriseBasicDataColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.enterprise_type AS "enterpriseType",
+		a.enterprise_count AS "enterpriseCount",
+		a.enterprise_money AS "enterpriseMoney",
+		a.person_count AS "personCount"
+	</sql>
+	
+	<sql id="cacheEnterpriseBasicDataJoins">
+	</sql>
+    
+	<select id="get" resultType="CacheEnterpriseBasicData">
+		SELECT 
+			<include refid="cacheEnterpriseBasicDataColumns"/>
+		FROM cache_enterprise_basic_data a
+		<include refid="cacheEnterpriseBasicDataJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CacheEnterpriseBasicData">
+		SELECT 
+			<include refid="cacheEnterpriseBasicDataColumns"/>
+		FROM cache_enterprise_basic_data a
+		<include refid="cacheEnterpriseBasicDataJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CacheEnterpriseBasicData">
+		SELECT 
+			<include refid="cacheEnterpriseBasicDataColumns"/>
+		FROM cache_enterprise_basic_data a
+		<include refid="cacheEnterpriseBasicDataJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cache_enterprise_basic_data(
+			id,
+			nyear,
+			enterprise_type,
+			enterprise_count,
+			enterprise_money,
+			person_count
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{enterpriseType},
+			#{enterpriseCount},
+			#{enterpriseMoney},
+			#{personCount}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO cache_enterprise_basic_data(
+			id,
+			nyear,
+			enterprise_type,
+			enterprise_count,
+			enterprise_money,
+			person_count
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.enterpriseType},
+			#{item.enterpriseCount},
+			#{item.enterpriseMoney},
+			#{item.personCount}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE cache_enterprise_basic_data SET 	
+			nyear = #{nyear},
+			enterprise_type = #{enterpriseType},
+			enterprise_count = #{enterpriseCount},
+			enterprise_money = #{enterpriseMoney},
+			person_count = #{personCount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cache_enterprise_basic_data
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

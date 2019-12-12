@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.wlkj.dao.CatchSourceOpinionDao">
+    
+	<sql id="catchSourceOpinionColumns">
+		a.id AS "id",
+		a.source_type AS "sourceType",
+		a.number AS "number",
+		a.date AS "date"
+	</sql>
+	
+	<sql id="catchSourceOpinionJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchSourceOpinion">
+		SELECT 
+			<include refid="catchSourceOpinionColumns"/>
+		FROM catch_source_opinion a
+		<include refid="catchSourceOpinionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchSourceOpinion">
+		SELECT 
+			<include refid="catchSourceOpinionColumns"/>
+		FROM catch_source_opinion a
+		<include refid="catchSourceOpinionJoins"/>
+		<where>
+			
+			<if test="sourceType != null and sourceType != ''">
+				AND a.source_type = #{sourceType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchSourceOpinion">
+		SELECT 
+			<include refid="catchSourceOpinionColumns"/>
+		FROM catch_source_opinion a
+		<include refid="catchSourceOpinionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_source_opinion(
+			id,
+			source_type,
+			number,
+			date
+		) VALUES (
+			#{id},
+			#{sourceType},
+			#{number},
+			#{date}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_source_opinion SET 	
+			source_type = #{sourceType},
+			number = #{number},
+			date = #{date}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_source_opinion
+		WHERE id = #{id}
+	</update>
+	<select id="sourceData" resultType="CatchSourceOpinion">
+		SELECT
+			a.id AS "id",
+		a.source_type AS "sourceType",
+		a.number AS "number",
+		max(a.date) AS "date"
+		FROM catch_source_opinion a
+		GROUP BY a.source_type
+	</select>
+</mapper>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchAssetDetailsDao">
+    
+	<sql id="catchAssetDetailsColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.type AS "type",
+		a.cont AS "cont",
+		a.image_path AS "imagePath"
+	</sql>
+	
+	<sql id="catchAssetDetailsJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchAssetDetails">
+		SELECT 
+			<include refid="catchAssetDetailsColumns"/>
+		FROM catch_asset_details a
+		<include refid="catchAssetDetailsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchAssetDetails">
+		SELECT 
+			<include refid="catchAssetDetailsColumns"/>
+		FROM catch_asset_details a
+		<include refid="catchAssetDetailsJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchAssetDetails">
+		SELECT 
+			<include refid="catchAssetDetailsColumns"/>
+		FROM catch_asset_details a
+		<include refid="catchAssetDetailsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_asset_details(
+			id,
+			nyear,
+			type,
+			cont,
+			image_path
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{type},
+			#{cont},
+			#{imagePath}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_asset_details(
+			id,
+			nyear,
+			type,
+			cont,
+			image_path
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.nyear},
+			#{item.type},
+			#{item.cont},
+			#{item.imagePath}
+		)  
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_asset_details SET 	
+			nyear = #{nyear},
+			type = #{type},
+			cont = #{cont},
+			image_path = #{imagePath}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_asset_details
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteAll">
+		DELETE FROM catch_asset_details
+	</update>
+</mapper>

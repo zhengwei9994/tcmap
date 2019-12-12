@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchProblemSolvingDao">
+    
+	<sql id="catchProblemSolvingColumn">
+		a.id AS "id",
+		a.type AS "type",
+		a.num AS "num",
+		a.has_solve AS "hasSolve"
+	</sql>
+	
+	<sql id="catchProblemSolvingJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchProblemSolving">
+		SELECT 
+			<include refid="catchProblemSolvingColumn"/>
+		FROM catch_problem_solving a
+		<include refid="catchProblemSolvingJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchProblemSolving">
+		SELECT 
+			<include refid="catchProblemSolvingColumn"/>
+		FROM catch_problem_solving a
+		<include refid="catchProblemSolvingJoins"/>
+		<where>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchProblemSolving">
+		SELECT 
+			<include refid="catchProblemSolvingColumn"/>
+		FROM catch_problem_solving a
+		<include refid="catchProblemSolvingJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_problem_solving(
+			id ,
+			type ,
+			num ,
+			has_solve
+		) VALUES (
+			#{id},
+			#{type},
+			#{num},
+			#{hasSolve}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_problem_solving(
+		id ,
+		type ,
+		num ,
+		has_solve
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.type},
+			#{item.num},
+			#{item.hasSolve}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_problem_solving SET
+			type  = #{type},
+			num = #{num},
+			has_solve   = #{hasSolve}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_problem_solving
+		WHERE id = #{id}
+	</update>
+
+</mapper>

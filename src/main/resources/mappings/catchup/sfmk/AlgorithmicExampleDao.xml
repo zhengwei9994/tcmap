@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.sfmk.dao.AlgorithmicExampleDao">
+    
+	<sql id="algorithmicExampleColumns">
+		a.id AS "id",
+		a.rootid AS "rootid",
+		a.parameterid AS "parameterid",
+		a.numvalue AS "numvalue",
+		a.result AS "result",
+		a.name AS "name"
+	</sql>
+	
+	<sql id="algorithmicExampleJoins">
+	</sql>
+    
+	<select id="get" resultType="AlgorithmicExample">
+		SELECT 
+			<include refid="algorithmicExampleColumns"/>
+		FROM algorithmic_example a
+		<include refid="algorithmicExampleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AlgorithmicExample">
+		SELECT 
+			<include refid="algorithmicExampleColumns"/>
+		FROM algorithmic_example a
+		<include refid="algorithmicExampleJoins"/>
+		<where>
+			<if test="name != null and name != ''">
+				AND a.name = #{name}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AlgorithmicExample">
+		SELECT 
+			<include refid="algorithmicExampleColumns"/>
+		FROM algorithmic_example a
+		<include refid="algorithmicExampleJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO algorithmic_example(
+			id,
+			rootid,
+			parameterid,
+			numvalue,
+			result,
+			name
+		) VALUES (
+			#{id},
+			#{rootid},
+			#{parameterid},
+			#{numvalue},
+			#{result},
+			#{name}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE algorithmic_example SET 	
+			rootid = #{rootid},
+			parameterid = #{parameterid},
+			numvalue = #{numvalue},
+			result = #{result},
+			name = #{name}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM algorithmic_example
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

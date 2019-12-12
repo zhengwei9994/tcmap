@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchIndexStatusDao">
+    
+	<sql id="catchIndexStatusColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.index_type AS "indexType",
+		a.index_name AS "indexName",
+		a.completion_rate AS "completionRate",
+		a.average_rates  AS "averageRates"
+	</sql>
+	
+	<sql id="catchIndexStatusJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchIndexStatus">
+		SELECT 
+			<include refid="catchIndexStatusColumns"/>
+		FROM catch_index_status a
+		<include refid="catchIndexStatusJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchIndexStatus">
+		SELECT 
+			<include refid="catchIndexStatusColumns"/>
+		FROM catch_index_status a
+		<include refid="catchIndexStatusJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="indexType != null and indexType != ''">
+				AND a.index_type = #{indexType}
+			</if>
+			<if test="indexName != null and indexName != ''">
+				AND a.index_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{indexName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{indexName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{indexName},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="groupByindexType" resultType="CatchIndexStatus">
+		SELECT
+		<include refid="catchIndexStatusColumns"/>
+		FROM catch_index_status a
+		<include refid="catchIndexStatusJoins"/>
+		<where>
+
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+		GROUP BY index_type
+	</select>
+	
+	<select id="findAllList" resultType="CatchIndexStatus">
+		SELECT 
+			<include refid="catchIndexStatusColumns"/>
+		FROM catch_index_status a
+		<include refid="catchIndexStatusJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_index_status(
+			id,
+			nyear,
+			index_type,
+			index_name,
+			completion_rate,
+			average_rates
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{indexType},
+			#{indexName},
+			#{completionRate},
+			#{averageRates}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_index_status(
+			id,
+			nyear,
+			index_type,
+			index_name,
+			completion_rate,
+			average_rates
+		) VALUES 
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.nyear},
+			#{item.indexType},
+			#{item.indexName},
+			#{item.completionRate},
+			#{item.averageRates}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_index_status SET 	
+			nyear = #{nyear},
+			index_type = #{indexType},
+			index_name = #{indexName},
+			completion_rate = #{completionRate},
+			average_rates = #{averageRates}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_index_status
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

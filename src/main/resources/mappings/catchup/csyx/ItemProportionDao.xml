@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.ItemProportionDao">
+    
+	<sql id="itemProportionColumns">
+		a.id AS "id",
+		a.item AS "item",
+		a.proportion AS "proportion"
+	</sql>
+	
+	<sql id="itemProportionJoins">
+	</sql>
+    
+	<select id="get" resultType="ItemProportion">
+		SELECT 
+			<include refid="itemProportionColumns"/>
+		FROM item_proportion a
+		<include refid="itemProportionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ItemProportion">
+		SELECT 
+			<include refid="itemProportionColumns"/>
+		FROM item_proportion a
+		<include refid="itemProportionJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ItemProportion">
+		SELECT 
+			<include refid="itemProportionColumns"/>
+		FROM item_proportion a
+		<include refid="itemProportionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO item_proportion(
+			id,
+			item,
+			proportion
+		) VALUES (
+			#{id},
+			#{item},
+			#{proportion}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE item_proportion SET 	
+			item = #{item},
+			proportion = #{proportion}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM item_proportion
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.khgl.dao.CatchAssessmentManagementDao">
+    
+	<sql id="catchAssessmentManagementColumns">
+		a.id AS "id",
+		a.department AS "department",
+		a.sector AS "sector",
+		a.name AS "name",
+		a.mission AS "mission",
+		a.score AS "score",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.start_date AS "startDate",
+		a.end_date AS "endDate"
+	</sql>
+	
+	<sql id="catchAssessmentManagementJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchAssessmentManagement">
+		SELECT 
+			<include refid="catchAssessmentManagementColumns"/>
+		FROM catch_assessment_management a
+		<include refid="catchAssessmentManagementJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchAssessmentManagement">
+		SELECT 
+			<include refid="catchAssessmentManagementColumns"/>
+		FROM catch_assessment_management a
+		<include refid="catchAssessmentManagementJoins"/>
+		<where>
+			
+			<if test="department != null and department != ''">
+				AND a.department = #{department}
+			</if>
+			<if test="sector != null and sector != ''">
+				AND a.sector = #{sector}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchAssessmentManagement">
+		SELECT 
+			<include refid="catchAssessmentManagementColumns"/>
+		FROM catch_assessment_management a
+		<include refid="catchAssessmentManagementJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_assessment_management(
+			id,
+			department,
+			sector,
+			name,
+			mission,
+			score,
+			create_date,
+			update_date,
+			start_date,
+			end_date
+		) VALUES (
+			#{id},
+			#{department},
+			#{sector},
+			#{name},
+			#{mission},
+			#{score},
+			#{createDate},
+			#{updateDate},
+			#{startDate},
+			#{endDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_assessment_management SET 	
+			department = #{department},
+			sector = #{sector},
+			name = #{name},
+			mission = #{mission},
+			score = #{score},
+			create_date = #{createDate},
+			update_date = #{updateDate},
+			start_date = #{startDate},
+			end_date = #{endDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_assessment_management
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

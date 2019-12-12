@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csly.dao.TouristInformationDao">
+    
+	<sql id="touristInformationColumns">
+		a.id AS "id",
+		a.information AS "information",
+		a.media AS "media",
+		a.volume AS "volume",
+		a.date AS "date"
+	</sql>
+	
+	<sql id="touristInformationJoins">
+	</sql>
+    
+	<select id="get" resultType="TouristInformation">
+		SELECT 
+			<include refid="touristInformationColumns"/>
+		FROM tourist_information a
+		<include refid="touristInformationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TouristInformation">
+		SELECT 
+			<include refid="touristInformationColumns"/>
+		FROM tourist_information a
+		<include refid="touristInformationJoins"/>
+		<where>
+			
+			<if test="information != null and information != ''">
+				AND a.information = #{information}
+			</if>
+			<if test="media != null and media != ''">
+				AND a.media = #{media}
+			</if>
+			<if test="date != null and date != ''">
+				AND a.date = #{date}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TouristInformation">
+		SELECT 
+			<include refid="touristInformationColumns"/>
+		FROM tourist_information a
+		<include refid="touristInformationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tourist_information(
+			id,
+			information,
+			media,
+			volume,
+			date
+		) VALUES (
+			#{id},
+			#{information},
+			#{media},
+			#{volume},
+			#{date}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tourist_information SET 	
+			information = #{information},
+			media = #{media},
+			volume = #{volume},
+			date = #{date}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tourist_information
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

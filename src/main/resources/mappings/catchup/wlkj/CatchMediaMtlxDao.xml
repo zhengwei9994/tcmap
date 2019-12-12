@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.wlkj.dao.CatchMediaMtlxDao">
+    
+	<sql id="catchMediaMtlxColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.contribution AS "contribution",
+		a.proportion AS "proportion"
+	</sql>
+	
+	<sql id="catchMediaMtlxJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchMediaMtlx">
+		SELECT 
+			<include refid="catchMediaMtlxColumns"/>
+		FROM catch_media_mtlx a
+		<include refid="catchMediaMtlxJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchMediaMtlx">
+		SELECT 
+			<include refid="catchMediaMtlxColumns"/>
+		FROM catch_media_mtlx a
+		<include refid="catchMediaMtlxJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchMediaMtlx">
+		SELECT 
+			<include refid="catchMediaMtlxColumns"/>
+		FROM catch_media_mtlx a
+		<include refid="catchMediaMtlxJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_media_mtlx(
+			id,
+			name,
+			contribution,
+			proportion
+		) VALUES (
+			#{id},
+			#{name},
+			#{contribution},
+			#{proportion}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_media_mtlx SET 	
+			name = #{name},
+			contribution = #{contribution},
+			proportion = #{proportion}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_media_mtlx
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

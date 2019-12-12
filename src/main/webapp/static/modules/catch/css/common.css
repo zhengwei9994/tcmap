@@ -1,0 +1,409 @@
+@charset "UTF-8";
+html, body,
+div, p,
+span, a, img,
+h1, h2, h3, h4, h5, h6,
+ol, ul, li,
+form, label, input, button, textarea, select, option {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    color: inherit;
+    font-size: inherit;
+    list-style: none;
+    text-decoration: none;
+    vertical-align: baseline;
+    background: transparent;
+    font-family: "Microsoft YaHei", "微软雅黑", "Arial", "simsum", "sans-serif";
+}
+
+body {
+    min-width: 320px;
+    min-height: 94vh;
+    color: #333;
+    font-size: 2.2rem;
+    background-color: #fff;
+    position: relative;
+}
+
+input, select, textarea {
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button, a {
+    cursor: pointer;
+}
+
+input {
+    padding-left: 8px;
+}
+
+select, option {
+    padding-left: 4px;
+}
+
+textarea {
+    overflow: auto;
+    padding: 8px;
+    resize: none;
+}
+
+img {
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.ta-c {
+    text-align: center;
+}
+
+.fw-b {
+    font-weight: bold;
+}
+
+.fs-max {
+    font-size: 1.1em;
+}
+
+.fs-min {
+    font-size: .9em;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("../img/bg-h.jpg");
+    background-size: cover;
+    padding: 2em 0;
+    line-height: 2;
+    color: #fff;
+    position: relative;
+}
+
+header button {
+    width: 2em;
+    height: 2em;
+    background: url("../img/ico-h.png");
+    background-size: cover;
+    position: absolute;
+    top: .8em;
+    left: 1em;
+}
+
+header img {
+    width: 5em;
+}
+
+header div {
+    position: absolute;
+    top: -999px;
+    left: 0;
+    color: #333;
+    background-color: #f8f8f8;
+}
+
+header a {
+    display: block;
+    line-height: 3;
+    padding: 0 1em;
+}
+
+header a:first-child, header a:nth-child(2) {
+    background-color: #fff;
+}
+
+header a:first-child, header a:nth-child(3) {
+    padding-top: .4em;
+}
+
+header a:nth-child(2), header a:last-child {
+    padding-bottom: .6em;
+}
+
+header a img {
+    width: 2em;
+    margin-right: .6em;
+}
+
+header .nav {
+    transition: all .6s;
+    top: 0;
+}
+
+footer {
+    font-size: .9em;
+    text-align: center;
+    line-height: 6vh;
+    background-color: #f4f4f4;
+    position: absolute;
+    right: 0;
+    bottom: -6vh;
+    left: 0;
+}
+
+h5 {
+    color: #101010;
+    font-weight: normal;
+    font-size: 1.1em;
+    line-height: 3;
+    padding: 0 1em;
+    border-bottom: 1px solid #eaeaea;
+    background-color: #f4f4f4;
+}
+
+h5:before {
+    content: ' ';
+    display: inline-block;
+    vertical-align: sub;
+    width: 1.1em;
+    height: 1.1em;
+    margin-right: .4em;
+    background: url("../img/h5.png");
+    background-size: 100% 100%;
+}
+
+h6 {
+    font-weight: normal;
+    padding: .6em 1em;
+    margin: 1em;
+    background-color: #ecf9ff;
+}
+
+.select {
+    padding: 1em;
+    background-color: #f4f4f4;
+}
+
+.select label {
+    display: inline-block;
+    width: 3.4em;
+}
+
+.select select {
+    width: 7em;
+    height: 2em;
+    margin-right: 1em;
+    border-radius: 4px;
+    border: none;
+    background-color: #fff;
+}
+
+.menu-pt {
+    padding-top: 3em;
+}
+
+.menu-pb {
+    padding-bottom: 6em;
+}
+
+.menu {
+    text-align: center;
+    min-width: 320px;
+    background-color: #fff;
+    position: fixed;
+    right: 0;
+    left: 0;
+    z-index: 99;
+}
+
+.menu2 {
+    padding: .6em 0;
+    margin-bottom: .6em;
+    text-align: center;
+    background: #f4f4f4;
+}
+
+.menu2 span {
+    display: inline-block;
+    padding: .4em 1.4em;
+    border-radius: 2em;
+    background: #fff;
+    margin: 0 1em;
+}
+
+.cont, .cont2 {
+    overflow: hidden;
+}
+
+.menu .on {
+    color: #1ab1ff;
+    border-bottom: 2px solid #1ab1ff;
+}
+
+.menu2 .on {
+    color: #fff;
+    background: #1ab1ff;
+}
+
+.ti-2em {
+    text-indent: 2em;
+}
+
+.txt {
+    padding: 0.3em;
+    line-height: 2;
+    text-align: justify;
+}
+
+.echarts-box {
+    position: relative;
+}
+
+.echarts {
+    height: 300px;
+    width: 100%;
+    padding-top: 1em;
+    position: relative;
+}
+
+.echarts-btn {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    font-size: 12px;
+    padding: .2em 1em;
+    border-radius: .4em;
+    color: #fff;
+    background: #1ab1ff;
+}
+
+.echarts-table {
+    display: none;
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: .9em;
+}
+
+.echarts-table tr {
+    line-height: 2;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.echarts-table tr:first-child {
+    border-top: 1px solid #f4f4f4;
+}
+
+.ico1:after {
+    content: '>';
+    float: right;
+}
+
+.message {
+    margin: auto;
+    position: fixed;
+    right: 1em;
+    bottom: 1em;
+    left: 1em;
+    z-index: -1;
+    padding: 1rem;
+    text-align: center;
+    color: #fff;
+    background: #000;
+    transition: all 1s;
+    opacity: 0;
+}
+
+.message.on {
+    opacity: 1;
+    z-index: 999;
+}
+
+.loader {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+}
+
+.ball-pulse > div {
+    background-color: #1ab1ff;
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    margin: 2px;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    display: inline-block;
+}
+
+.ball-pulse > div:nth-child(0) {
+    -webkit-animation: scale 0.75s 0s infinite cubic-bezier(.2, .68, .18, 1.08);
+    animation: scale 0.75s 0s infinite cubic-bezier(.2, .68, .18, 1.08);
+}
+
+.ball-pulse > div:nth-child(1) {
+    -webkit-animation: scale 0.75s 0.12s infinite cubic-bezier(.2, .68, .18, 1.08);
+    animation: scale 0.75s 0.12s infinite cubic-bezier(.2, .68, .18, 1.08);
+}
+
+.ball-pulse > div:nth-child(2) {
+    -webkit-animation: scale 0.75s 0.24s infinite cubic-bezier(.2, .68, .18, 1.08);
+    animation: scale 0.75s 0.24s infinite cubic-bezier(.2, .68, .18, 1.08);
+}
+
+.ball-pulse > div:nth-child(3) {
+    -webkit-animation: scale 0.75s 0.36s infinite cubic-bezier(.2, .68, .18, 1.08);
+    animation: scale 0.75s 0.36s infinite cubic-bezier(.2, .68, .18, 1.08);
+}
+
+@-webkit-keyframes scale {
+    0% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    45% {
+        -webkit-transform: scale(0.1);
+        transform: scale(0.1);
+        opacity: 0.7;
+    }
+
+    80% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes scale {
+    0% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    45% {
+        -webkit-transform: scale(0.1);
+        transform: scale(0.1);
+        opacity: 0.7;
+    }
+
+    80% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 640px) {
+    header {
+        background-position: -540px 0;
+    }
+}
+
+@media (max-width: 340px) {
+    header {
+        background-position: -340px 0;
+    }
+}

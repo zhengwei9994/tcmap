@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.LiveMultipleCityManageDao">
+    
+	<sql id="liveMultipleCityManageColumns">
+		a.id AS "id",
+		a.event_type AS "eventType",
+		a.done AS "done",
+		a.doing AS "doing",
+		a.extension AS "extension",
+		a.agency AS "agency",
+		a.disposal_rate AS "disposalRate",
+		a.year AS "year"
+	</sql>
+	
+	<sql id="liveMultipleCityManageJoins">
+	</sql>
+    
+	<select id="get" resultType="LiveMultipleCityManage">
+		SELECT 
+			<include refid="liveMultipleCityManageColumns"/>
+		FROM live_multiple_city_manage a
+		<include refid="liveMultipleCityManageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="LiveMultipleCityManage">
+		SELECT 
+			<include refid="liveMultipleCityManageColumns"/>
+		FROM live_multiple_city_manage a
+		<include refid="liveMultipleCityManageJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LiveMultipleCityManage">
+		SELECT 
+			<include refid="liveMultipleCityManageColumns"/>
+		FROM live_multiple_city_manage a
+		<include refid="liveMultipleCityManageJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO live_multiple_city_manage(
+			id,
+			event_type,
+			done,
+			doing,
+			extension,
+			agency,
+			disposal_rate,
+			year
+		) VALUES (
+			#{id},
+			#{eventType},
+			#{done},
+			#{doing},
+			#{extension},
+			#{agency},
+			#{disposalRate},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE live_multiple_city_manage SET 	
+			event_type = #{eventType},
+			done = #{done},
+			doing = #{doing},
+			extension = #{extension},
+			agency = #{agency},
+			disposal_rate = #{disposalRate},
+			year = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM live_multiple_city_manage
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

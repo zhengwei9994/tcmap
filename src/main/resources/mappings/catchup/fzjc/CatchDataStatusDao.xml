@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchDataStatusDao">
+    
+	<sql id="catchDataStatusColumns">
+		a.id AS "id",
+		a.data_direct AS "dataDirect",
+		a.nyear AS "nyear",
+		a.month AS "month",
+		a.data_search AS "dataSearch",
+		a.data_gov AS "dataGov"
+	</sql>
+	
+	<sql id="catchDataStatusJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchDataStatus">
+		SELECT 
+			<include refid="catchDataStatusColumns"/>
+		FROM catch_data_status a
+		<include refid="catchDataStatusJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchDataStatus">
+		SELECT 
+			<include refid="catchDataStatusColumns"/>
+		FROM catch_data_status a
+		<include refid="catchDataStatusJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchDataStatus">
+		SELECT 
+			<include refid="catchDataStatusColumns"/>
+		FROM catch_data_status a
+		<include refid="catchDataStatusJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_data_status(
+			id,
+			data_direct,
+			nyear,
+			month,
+			data_search,
+			data_gov
+		) VALUES (
+			#{id},
+			#{dataDirect},
+			#{nyear},
+			#{month},
+			#{dataSearch},
+			#{dataGov}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_data_status(
+			id,
+			data_direct,
+			nyear,
+			month,
+			data_search,
+			data_gov
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.dataDirect},
+			#{item.nyear},
+			#{item.month},
+			#{item.dataSearch},
+			#{item.dataGov}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_data_status SET 	
+			data_direct = #{dataDirect},
+			nyear = #{nyear},
+			month = #{month},
+			data_search = #{dataSearch},
+			data_gov = #{dataGov}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_data_status
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.BusinessPersonnelDao">
+    
+	<sql id="businessPersonnelColumns">
+		a.id AS "id",
+		a.education AS "education",
+		a.num AS "num",
+		a.month AS "month",
+		a.year AS "year"
+	</sql>
+	
+	<sql id="businessPersonnelJoins">
+	</sql>
+    
+	<select id="get" resultType="BusinessPersonnel">
+		SELECT 
+			<include refid="businessPersonnelColumns"/>
+		FROM business_personnel a
+		<include refid="businessPersonnelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BusinessPersonnel">
+		SELECT 
+			<include refid="businessPersonnelColumns"/>
+		FROM business_personnel a
+		<include refid="businessPersonnelJoins"/>
+		<where>
+			
+			<if test="education != null and education != ''">
+				AND a.education = #{education}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+			<if test="year != null and year != ''">
+				AND a.year = #{year}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BusinessPersonnel">
+		SELECT 
+			<include refid="businessPersonnelColumns"/>
+		FROM business_personnel a
+		<include refid="businessPersonnelJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY `year` desc,`month`
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO business_personnel(
+			id,
+			education,
+			num,
+			month,
+			year
+		) VALUES (
+			#{id},
+			#{education},
+			#{num},
+			#{month},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE business_personnel SET 	
+			education = #{education},
+			num = #{num},
+			month = #{month},
+			year = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM business_personnel
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

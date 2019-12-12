@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.ShowInnovateDao">
+    
+	<sql id="showInnovateColumns">
+		a.id AS "id",
+		a.num AS "num",
+		a.year AS "year",
+		a.proportion AS "proportion",
+		a.MONTH AS "month"
+	</sql>
+	
+	<sql id="showInnovateJoins">
+	</sql>
+    
+	<select id="get" resultType="ShowInnovate">
+		SELECT 
+			<include refid="showInnovateColumns"/>
+		FROM show_innovate a
+		<include refid="showInnovateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShowInnovate">
+		SELECT 
+			<include refid="showInnovateColumns"/>
+		FROM show_innovate a
+		<include refid="showInnovateJoins"/>
+		<where>
+			
+			<if test="num != null and num != ''">
+				AND a.num = #{num}
+			</if>
+			<if test="year != null and year !=''">
+				and a.year = #{year}
+			</if>
+			<if test="proportion != null and proportion != ''">
+				AND a.proportion = #{proportion}
+			</if>
+			<if test="month != null and month !=''">
+				and a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShowInnovate">
+		SELECT 
+			<include refid="showInnovateColumns"/>
+		FROM show_innovate a
+		<include refid="showInnovateJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO show_innovate(
+			id,
+			num,
+			year,
+			proportion,
+			month
+		) VALUES (
+			#{id},
+			#{num},
+			#{year},
+			#{proportion},
+			#{month}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE show_innovate SET 	
+			num = #{num},
+			year = #{year},
+			proportion = #{proportion},
+			month = #{month }
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM show_innovate
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

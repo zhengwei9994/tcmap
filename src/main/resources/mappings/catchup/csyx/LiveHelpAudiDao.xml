@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.LiveHelpAudiDao">
+    
+	<sql id="liveHelpAudiColumns">
+		a.id AS "id",
+		a.help_type AS "helpType",
+		a.households AS "households",
+		a.population AS "population"
+	</sql>
+	
+	<sql id="liveHelpAudiJoins">
+	</sql>
+    
+	<select id="get" resultType="LiveHelpAudi">
+		SELECT 
+			<include refid="liveHelpAudiColumns"/>
+		FROM live_help_audi a
+		<include refid="liveHelpAudiJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="LiveHelpAudi">
+		SELECT 
+			<include refid="liveHelpAudiColumns"/>
+		FROM live_help_audi a
+		<include refid="liveHelpAudiJoins"/>
+		<where>
+			<if test="helpType != null and helpType != ''">
+				AND a.help_type = #{helpType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LiveHelpAudi">
+		SELECT 
+			<include refid="liveHelpAudiColumns"/>
+		FROM live_help_audi a
+		<include refid="liveHelpAudiJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO live_help_audi(
+			id,
+			help_type,
+			households,
+			population
+		) VALUES (
+			#{id},
+			#{helpType},
+			#{households},
+			#{population}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE live_help_audi SET 	
+			help_type = #{helpType},
+			households = #{households},
+			population = #{population}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM live_help_audi
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

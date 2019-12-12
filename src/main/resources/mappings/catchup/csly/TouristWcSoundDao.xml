@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csly.dao.TouristWcSoundDao">
+    
+	<sql id="touristWcSoundColumns">
+		a.id AS "id",
+		a.month AS "month",
+		a.num AS "num",
+		a.year AS "year"
+	</sql>
+	
+	<sql id="touristWcSoundJoins">
+	</sql>
+    
+	<select id="get" resultType="TouristWcSound">
+		SELECT 
+			<include refid="touristWcSoundColumns"/>
+		FROM tourist_wc_sound a
+		<include refid="touristWcSoundJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TouristWcSound">
+		SELECT 
+			<include refid="touristWcSoundColumns"/>
+		FROM tourist_wc_sound a
+		<include refid="touristWcSoundJoins"/>
+		<where>
+			
+			<if test="month != null and month != ''">
+				AND a.month LIKE 
+					<if test="dbName == 'oracle'">'%'||#{month}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{month}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{month},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TouristWcSound">
+		SELECT 
+			<include refid="touristWcSoundColumns"/>
+		FROM tourist_wc_sound a
+		<include refid="touristWcSoundJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tourist_wc_sound(
+			id,
+			month,
+			num,
+			year
+		) VALUES (
+			#{id},
+			#{month},
+			#{num},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tourist_wc_sound SET 	
+			month = #{month},
+			num = #{num},
+			year = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tourist_wc_sound
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

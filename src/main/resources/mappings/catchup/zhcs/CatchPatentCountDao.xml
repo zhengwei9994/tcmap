@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchPatentCountDao">
+    
+	<sql id="catchPatentCountColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.patent_number AS "patentNumber"
+	</sql>
+	
+	<sql id="catchPatentCountJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchPatentCount">
+		SELECT 
+			<include refid="catchPatentCountColumns"/>
+		FROM catch_patent_count a
+		<include refid="catchPatentCountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchPatentCount">
+		SELECT 
+			<include refid="catchPatentCountColumns"/>
+		FROM catch_patent_count a
+		<include refid="catchPatentCountJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		ORDER BY a.nyear DESC
+	</select>
+	
+	<select id="findAllList" resultType="CatchPatentCount">
+		SELECT 
+			<include refid="catchPatentCountColumns"/>
+		FROM catch_patent_count a
+		<include refid="catchPatentCountJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		ORDER BY a.nyear DESC
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_patent_count(
+			id,
+			nyear,
+			patent_number
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{patentNumber}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_patent_count SET 	
+			nyear = #{nyear},
+			patent_number = #{patentNumber}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_patent_count
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteAll">
+		DELETE FROM catch_patent_count
+	</update>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_patent_count(
+		id,
+		nyear,
+		patent_number
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id}, #{item.nyear},	#{item.patentNumber})
+		</foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.safecity.dao.SafeTrafficDao">
+    
+	<sql id="safeTrafficColumns">
+		a.id AS "id",
+		a.safe_city_id AS "safeCityId",
+		a.area AS "area",
+		a.num AS "num",
+		a.count_date AS "countDate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		c.area as "safeCity"
+	</sql>
+	
+	<sql id="safeTrafficJoins">
+		left join safe_city c on a.safe_city_id = c.id
+	</sql>
+    
+	<select id="get" resultType="SafeTraffic">
+		SELECT 
+			<include refid="safeTrafficColumns"/>
+		FROM safe_traffic a
+		<include refid="safeTrafficJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SafeTraffic">
+		SELECT 
+			<include refid="safeTrafficColumns"/>
+		FROM safe_traffic a
+		<include refid="safeTrafficJoins"/>
+		<where>
+			
+			<if test="safeCityId != null and safeCityId != ''">
+				AND a.safe_city_id = #{safeCityId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SafeTraffic">
+		SELECT 
+			<include refid="safeTrafficColumns"/>
+		FROM safe_traffic a
+		<include refid="safeTrafficJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO safe_traffic(
+			id,
+			safe_city_id,
+			area,
+			num,
+			count_date,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{safeCityId},
+			#{area},
+			#{num},
+			#{countDate},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE safe_traffic SET 	
+			safe_city_id = #{safeCityId},
+			area = #{area},
+			num = #{num},
+			count_date = #{countDate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM safe_traffic
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csly.dao.TouristWcPositiveDao">
+    
+	<sql id="touristWcPositiveColumns">
+		a.id AS "id",
+		a.word AS "word",
+		a.num AS "num"
+	</sql>
+	
+	<sql id="touristWcPositiveJoins">
+	</sql>
+    
+	<select id="get" resultType="TouristWcPositive">
+		SELECT 
+			<include refid="touristWcPositiveColumns"/>
+		FROM tourist_wc_positive a
+		<include refid="touristWcPositiveJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TouristWcPositive">
+		SELECT 
+			<include refid="touristWcPositiveColumns"/>
+		FROM tourist_wc_positive a
+		<include refid="touristWcPositiveJoins"/>
+		<where>
+			
+			<if test="word != null and word != ''">
+				AND a.word LIKE 
+					<if test="dbName == 'oracle'">'%'||#{word}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{word}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{word},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TouristWcPositive">
+		SELECT 
+			<include refid="touristWcPositiveColumns"/>
+		FROM tourist_wc_positive a
+		<include refid="touristWcPositiveJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tourist_wc_positive(
+			id,
+			word,
+			num
+		) VALUES (
+			#{id},
+			#{word},
+			#{num}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tourist_wc_positive SET 	
+			word = #{word},
+			num = #{num}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tourist_wc_positive
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

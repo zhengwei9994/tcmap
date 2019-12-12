@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.IndustrialDevelopmentDao">
+    
+	<sql id="industrialDevelopmentColumns">
+		a.id AS "id",
+		a.year AS "year",
+		a.profession AS "profession",
+		a.professionson1 AS "professionson1",
+		a.professionson2 AS "professionson2",
+		a.capital AS "capital",
+		a.growthrate AS "growthrate",
+		a.month AS "month",
+		a.reserve1 AS "reserve1",
+		a.reserve2 AS "reserve2",
+		a.reserve3 AS "reserve3",
+		a.reserve4 AS "reserve4",
+		a.reserve5 AS "reserve5"
+	</sql>
+	
+	<sql id="industrialDevelopmentJoins">
+	</sql>
+    
+	<select id="get" resultType="IndustrialDevelopment">
+		SELECT 
+			<include refid="industrialDevelopmentColumns"/>
+		FROM industrial_development a
+		<include refid="industrialDevelopmentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="IndustrialDevelopment">
+		SELECT 
+			<include refid="industrialDevelopmentColumns"/>
+		FROM industrial_development a
+		<include refid="industrialDevelopmentJoins"/>
+		<where>
+			
+			<if test="year != null and year != ''">
+				AND a.year = #{year}
+			</if>
+			<if test="profession != null and profession != ''">
+				AND a.profession = #{profession}
+			</if>
+			<if test="professionson1 != null and professionson1 != ''">
+				AND a.professionson1 = #{professionson1}
+			</if>
+			<if test="professionson2 != null and professionson2 != ''">
+				AND a.professionson2 = #{professionson2}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.year desc ,a.month
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IndustrialDevelopment">
+		SELECT 
+			<include refid="industrialDevelopmentColumns"/>
+		FROM industrial_development a
+		<include refid="industrialDevelopmentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO industrial_development(
+			id,
+			year,
+			profession,
+			professionson1,
+			professionson2,
+			capital,
+			growthrate,
+			month,
+			reserve1,
+			reserve2,
+			reserve3,
+			reserve4,
+			reserve5
+		) VALUES (
+			#{id},
+			#{year},
+			#{profession},
+			#{professionson1},
+			#{professionson2},
+			#{capital},
+			#{growthrate},
+			#{month},
+			#{reserve1},
+			#{reserve2},
+			#{reserve3},
+			#{reserve4},
+			#{reserve5}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE industrial_development SET 	
+			year = #{year},
+			profession = #{profession},
+			professionson1 = #{professionson1},
+			professionson2 = #{professionson2},
+			capital = #{capital},
+			growthrate = #{growthrate},
+			month = #{month},
+			reserve1 = #{reserve1},
+			reserve2 = #{reserve2},
+			reserve3 = #{reserve3},
+			reserve4 = #{reserve4},
+			reserve5 = #{reserve5}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM industrial_development
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

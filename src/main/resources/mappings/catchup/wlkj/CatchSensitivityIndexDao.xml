@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.wlkj.dao.CatchSensitivityIndexDao">
+    
+	<sql id="catchSensitivityIndexColumns">
+		a.id AS "id",
+		a.sensitive_index AS "sensitiveIndex",
+		a.non_sensitive_index AS "nonSensitiveIndex"
+	</sql>
+	
+	<sql id="catchSensitivityIndexJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchSensitivityIndex">
+		SELECT 
+			<include refid="catchSensitivityIndexColumns"/>
+		FROM catch_sensitivity_index a
+		<include refid="catchSensitivityIndexJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchSensitivityIndex">
+		SELECT 
+			<include refid="catchSensitivityIndexColumns"/>
+		FROM catch_sensitivity_index a
+		<include refid="catchSensitivityIndexJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchSensitivityIndex">
+		SELECT 
+			<include refid="catchSensitivityIndexColumns"/>
+		FROM catch_sensitivity_index a
+		<include refid="catchSensitivityIndexJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_sensitivity_index(
+			id,
+			sensitive_index,
+			non_sensitive_index
+		) VALUES (
+			#{id},
+			#{sensitiveIndex},
+			#{nonSensitiveIndex}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_sensitivity_index SET 	
+			sensitive_index = #{sensitiveIndex},
+			non_sensitive_index = #{nonSensitiveIndex}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_sensitivity_index
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

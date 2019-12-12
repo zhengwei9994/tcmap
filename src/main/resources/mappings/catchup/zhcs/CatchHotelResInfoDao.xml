@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchHotelResInfoDao">
+    
+	<sql id="catchHotelResInfoColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.hotel_type AS "hotelType",
+		a.hotel_level AS "hotelLevel",
+		a.hotel_count AS "hotelCount",
+		a.hotel_check_count AS "hotelCheckCount",
+		a.hotel_top_names AS "hotelTopNames"
+	</sql>
+	
+	<sql id="catchHotelResInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchHotelResInfo">
+		SELECT 
+			<include refid="catchHotelResInfoColumns"/>
+		FROM catch_hotel_res_info a
+		<include refid="catchHotelResInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchHotelResInfo">
+		SELECT 
+			<include refid="catchHotelResInfoColumns"/>
+		FROM catch_hotel_res_info a
+		<include refid="catchHotelResInfoJoins"/>
+		<where>
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="hotelType != null and hotelType != ''">
+				AND a.hotel_type = #{hotelType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchHotelResInfo">
+		SELECT 
+			<include refid="catchHotelResInfoColumns"/>
+		FROM catch_hotel_res_info a
+		<include refid="catchHotelResInfoJoins"/>
+		<where>
+
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_hotel_res_info(
+			id,
+			nyear,
+			hotel_type,
+			hotel_level,
+			hotel_count,
+			hotel_check_count,
+			hotel_top_names
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{hotelType},
+			#{hotelLevel},
+			#{hotelCount},
+			#{hotelCheckCount},
+			#{hotelTopNames}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_hotel_res_info(
+			id,
+			nyear,
+			hotel_type,
+			hotel_level,
+			hotel_count,
+			hotel_check_count,
+			hotel_top_names
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.nyear},
+			#{item.hotelType},
+			#{item.hotelLevel},
+			#{item.hotelCount},
+			#{item.hotelCheckCount},
+			#{item.hotelTopNames}
+		)  
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_hotel_res_info SET 	
+			nyear = #{nyear},
+			hotel_type = #{hotelType},
+			hotel_level = #{hotelLevel},
+			hotel_count = #{hotelCount},
+			hotel_check_count = #{hotelCheckCount},
+			hotel_top_names = #{hotelTopNames}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_hotel_res_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

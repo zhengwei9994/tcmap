@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.ShowQualitylifeConsumptionDao">
+    
+	<sql id="showQualitylifeConsumptionColumns">
+		a.id AS "id",
+		a.year AS "year",
+		a.month AS "month",
+		a.consumption AS "consumption"
+	</sql>
+	
+	<sql id="showQualitylifeConsumptionJoins">
+	</sql>
+    
+	<select id="get" resultType="ShowQualitylifeConsumption">
+		SELECT 
+			<include refid="showQualitylifeConsumptionColumns"/>
+		FROM show_qualitylife_consumption a
+		<include refid="showQualitylifeConsumptionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShowQualitylifeConsumption">
+		SELECT 
+			<include refid="showQualitylifeConsumptionColumns"/>
+		FROM show_qualitylife_consumption a
+		<include refid="showQualitylifeConsumptionJoins"/>
+		<where>
+			
+			<if test="consumption != null and consumption != ''">
+				AND a.consumption = #{consumption}
+			</if>
+			<if test="year != null and year != ''">
+				and a.year = #{year}
+			</if>
+			<if test="month != null and month != ''">
+				and a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.year desc,a.month
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShowQualitylifeConsumption">
+		SELECT 
+			<include refid="showQualitylifeConsumptionColumns"/>
+		FROM show_qualitylife_consumption a
+		<include refid="showQualitylifeConsumptionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO show_qualitylife_consumption(
+			id,
+			year,
+			month,
+			consumption
+		) VALUES (
+			#{id},
+			#{year},
+			#{month},
+			#{consumption}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE show_qualitylife_consumption SET 	
+			year = #{year},
+			month = #{month},
+			consumption = #{consumption}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM show_qualitylife_consumption
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

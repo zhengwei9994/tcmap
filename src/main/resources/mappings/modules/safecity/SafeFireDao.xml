@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.safecity.dao.SafeFireDao">
+    
+	<sql id="safeFireColumns">
+		a.id AS "id",
+		a.safe_city_id AS "safeCityId",
+		a.fire_num AS "fireNum",
+		a.count_date AS "countDate",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		c.area as "safeCity"
+	</sql>
+	
+	<sql id="safeFireJoins">
+		left join safe_city c on a.safe_city_id = c.id
+	</sql>
+    
+	<select id="get" resultType="SafeFire">
+		SELECT 
+			<include refid="safeFireColumns"/>
+		FROM safe_fire a
+		<include refid="safeFireJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SafeFire">
+		SELECT 
+			<include refid="safeFireColumns"/>
+		FROM safe_fire a
+		<include refid="safeFireJoins"/>
+		<where>
+			
+			<if test="safeCityId != null and safeCityId != ''">
+				AND a.safe_city_id = #{safeCityId}
+			</if>
+			<if test="safeCity != null and safeCity != ''">
+				c.area = #{safeCity}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SafeFire">
+		SELECT 
+			<include refid="safeFireColumns"/>
+		FROM safe_fire a
+		<include refid="safeFireJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO safe_fire(
+			id,
+			safe_city_id,
+			fire_num,
+			count_date,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{safeCityId},
+			#{fireNum},
+			#{countDate},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE safe_fire SET 	
+			safe_city_id = #{safeCityId},
+			fire_num = #{fireNum},
+			count_date = #{countDate},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM safe_fire
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

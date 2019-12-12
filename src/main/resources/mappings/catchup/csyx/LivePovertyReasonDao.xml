@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.LivePovertyReasonDao">
+    
+	<sql id="livePovertyReasonColumns">
+		a.id AS "id",
+		a.area AS "area",
+		a.reason AS "reason",
+		a.num AS "num"
+	</sql>
+	
+	<sql id="livePovertyReasonJoins">
+	</sql>
+    
+	<select id="get" resultType="LivePovertyReason">
+		SELECT 
+			<include refid="livePovertyReasonColumns"/>
+		FROM live_poverty_reason a
+		<include refid="livePovertyReasonJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="LivePovertyReason">
+		SELECT 
+			<include refid="livePovertyReasonColumns"/>
+		FROM live_poverty_reason a
+		<include refid="livePovertyReasonJoins"/>
+		<where>
+			<if test="area != null and area != ''">
+				and a.area = #{area}
+			</if>
+			<if test="reason != null and reason != ''">
+				and a.reason = #{reason}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY area
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LivePovertyReason">
+		SELECT 
+			<include refid="livePovertyReasonColumns"/>
+		FROM live_poverty_reason a
+		<include refid="livePovertyReasonJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO live_poverty_reason(
+			id,
+			area,
+			reason,
+			num
+		) VALUES (
+			#{id},
+			#{area},
+			#{reason},
+			#{num}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE live_poverty_reason SET 	
+			area = #{area},
+			reason = #{reason},
+			num = #{num}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM live_poverty_reason
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

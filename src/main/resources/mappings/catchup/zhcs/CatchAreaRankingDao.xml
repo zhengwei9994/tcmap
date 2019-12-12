@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchAreaRankingDao">
+    
+	<sql id="catchAreaRankingColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.area_type AS "areaType",
+		a.area_name AS "areaName",
+		a.area_count AS "areaCount",
+		a.area_sort AS "areaSort"
+	</sql>
+	
+	<sql id="catchAreaRankingJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchAreaRanking">
+		SELECT 
+			<include refid="catchAreaRankingColumns"/>
+		FROM catch_area_ranking a
+		<include refid="catchAreaRankingJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchAreaRanking">
+		SELECT 
+			<include refid="catchAreaRankingColumns"/>
+		FROM catch_area_ranking a
+		<include refid="catchAreaRankingJoins"/>
+		<where>
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="areaType != null and areaType != ''">
+				AND a.area_type = #{areaType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchAreaRanking">
+		SELECT 
+			<include refid="catchAreaRankingColumns"/>
+		FROM catch_area_ranking a
+		<include refid="catchAreaRankingJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_area_ranking(
+			id,
+			nyear,
+			area_type,
+			area_name,
+			area_count,
+			area_sort
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{areaType},
+			#{areaName},
+			#{areaCount},
+			#{areaSort}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_area_ranking(
+			id,
+			nyear,
+			area_type,
+			area_name,
+			area_count,
+			area_sort
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.nyear},
+			#{item.areaType},
+			#{item.areaName},
+			#{item.areaCount},
+			#{item.areaSort}
+		)  
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_area_ranking SET 	
+			nyear = #{nyear},
+			area_type = #{areaType},
+			area_name = #{areaName},
+			area_count = #{areaCount},
+			area_sort = #{areaSort}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_area_ranking
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.LiveGovementDeepDao">
+    
+	<sql id="liveGovementDeepColumns">
+		a.id AS "id",
+		a.deep AS "deep",
+		a.value AS "value"
+	</sql>
+	
+	<sql id="liveGovementDeepJoins">
+	</sql>
+    
+	<select id="get" resultType="LiveGovementDeep">
+		SELECT 
+			<include refid="liveGovementDeepColumns"/>
+		FROM live_govement_deep a
+		<include refid="liveGovementDeepJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="LiveGovementDeep">
+		SELECT 
+			<include refid="liveGovementDeepColumns"/>
+		FROM live_govement_deep a
+		<include refid="liveGovementDeepJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LiveGovementDeep">
+		SELECT 
+			<include refid="liveGovementDeepColumns"/>
+		FROM live_govement_deep a
+		<include refid="liveGovementDeepJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO live_govement_deep(
+			id,
+			deep,
+			value
+		) VALUES (
+			#{id},
+			#{deep},
+			#{value}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE live_govement_deep SET 	
+			deep = #{deep},
+			value = #{value}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM live_govement_deep
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

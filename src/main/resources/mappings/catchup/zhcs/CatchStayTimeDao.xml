@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchStayTimeDao">
+    
+	<sql id="catchStayTimeColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.stay_place AS "stayPlace",
+		a.stay_time AS "stayTime",
+		a.stay_count AS "stayCount"
+	</sql>
+	
+	<sql id="catchStayTimeJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchStayTime">
+		SELECT 
+			<include refid="catchStayTimeColumns"/>
+		FROM catch_stay_time a
+		<include refid="catchStayTimeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchStayTime">
+		SELECT 
+			<include refid="catchStayTimeColumns"/>
+		FROM catch_stay_time a
+		<include refid="catchStayTimeJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchStayTime">
+		SELECT 
+			<include refid="catchStayTimeColumns"/>
+		FROM catch_stay_time a
+		<include refid="catchStayTimeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_stay_time(
+			id,
+			nyear,
+			stay_place,
+			stay_time,
+			stay_count
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{stayPlace},
+			#{stayTime},
+			#{stayCount}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_stay_time(
+			id,
+			nyear,
+			stay_place,
+			stay_time,
+			stay_count
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.nyear},
+			#{item.stayPlace},
+			#{item.stayTime},
+			#{item.stayCount}
+		)  
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_stay_time SET 	
+			nyear = #{nyear},
+			stay_place = #{stayPlace},
+			stay_time = #{stayTime},
+			stay_count = #{stayCount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_stay_time
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

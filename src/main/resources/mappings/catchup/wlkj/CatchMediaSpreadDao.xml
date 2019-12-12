@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.wlkj.dao.CatchMediaSpreadDao">
+    
+	<sql id="catchMediaSpreadColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.project_type AS "projectType",
+		a.total_investment AS "totalInvestment"
+	</sql>
+	
+	<sql id="catchMediaSpreadJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchMediaSpread">
+		SELECT 
+			<include refid="catchMediaSpreadColumns"/>
+		FROM catch_media_spread a
+		<include refid="catchMediaSpreadJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchMediaSpread">
+		SELECT 
+			<include refid="catchMediaSpreadColumns"/>
+		FROM catch_media_spread a
+		<include refid="catchMediaSpreadJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchMediaSpread">
+		SELECT 
+			<include refid="catchMediaSpreadColumns"/>
+		FROM catch_media_spread a
+		<include refid="catchMediaSpreadJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_media_spread(
+			id,
+			nyear,
+			project_type,
+			total_investment
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{projectType},
+			#{totalInvestment}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_media_spread SET 	
+			nyear = #{nyear},
+			project_type = #{projectType},
+			total_investment = #{totalInvestment}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_media_spread
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

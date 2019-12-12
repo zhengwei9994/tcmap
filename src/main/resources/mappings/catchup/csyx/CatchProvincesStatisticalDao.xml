@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchProvincesStatisticalDao">
+    
+	<sql id="catchProvincesStatisticalColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.tourists_sum AS "touristsSum",
+		a.other_provinces AS "otherProvinces",
+		a.this_provinces AS "thisProvinces",
+		a.foreigns AS "foreigns"
+	</sql>
+	
+	<sql id="catchProvincesStatisticalJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchProvincesStatistical">
+		SELECT 
+			<include refid="catchProvincesStatisticalColumns"/>
+		FROM catch_provinces_statistical a
+		<include refid="catchProvincesStatisticalJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchProvincesStatistical">
+		SELECT 
+			<include refid="catchProvincesStatisticalColumns"/>
+		FROM catch_provinces_statistical a
+		<include refid="catchProvincesStatisticalJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchProvincesStatistical">
+		SELECT 
+			<include refid="catchProvincesStatisticalColumns"/>
+		FROM catch_provinces_statistical a
+		<include refid="catchProvincesStatisticalJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_provinces_statistical(
+			id,
+			nyear,
+			tourists_sum,
+			other_provinces,
+			this_provinces,
+			foreigns
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{touristsSum},
+			#{otherProvinces},
+			#{thisProvinces},
+			#{foreigns}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_provinces_statistical(
+		id,
+		nyear,
+		tourists_sum,
+		other_provinces,
+		this_provinces,
+		foreigns
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.touristsSum},
+			#{item.otherProvinces},
+			#{item.thisProvinces},
+			#{item.foreigns}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_provinces_statistical SET 	
+			nyear = #{nyear},
+			tourists_sum = #{touristsSum},
+			other_provinces = #{otherProvinces},
+			this_provinces = #{thisProvinces},
+			foreigns = #{foreigns}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_provinces_statistical
+		WHERE id = #{id}
+	</update>
+	<select id="provincesData" resultType="CatchProvincesStatistical">
+		SELECT
+		a.nyear AS "nyear",
+		a.tourists_sum AS "touristsSum",
+		a.other_provinces AS "otherProvinces",
+		a.this_provinces AS "thisProvinces",
+		a.foreigns AS "foreigns"
+		FROM catch_provinces_statistical a
+		<where>
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+	</select>
+</mapper>

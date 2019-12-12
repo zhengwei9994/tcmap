@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.DevelopmentStructureDao">
+    
+	<sql id="developmentStructureColumns">
+		a.id AS "id",
+		a.industry AS "industry",
+		a.first AS "first",
+		a.second AS "second",
+		a.third AS "third",
+		a.month as "month",
+		a.year AS "year"
+	</sql>
+	
+	<sql id="developmentStructureJoins">
+	</sql>
+    
+	<select id="get" resultType="DevelopmentStructure">
+		SELECT 
+			<include refid="developmentStructureColumns"/>
+		FROM development_structure a
+		<include refid="developmentStructureJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DevelopmentStructure">
+		SELECT 
+			<include refid="developmentStructureColumns"/>
+		FROM development_structure a
+		<include refid="developmentStructureJoins"/>
+		<where>
+			
+			<if test="industry != null and industry != ''">
+				AND a.industry = #{industry}
+			</if>
+			<if test="year != null and year != ''">
+				AND a.year = #{year}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month }
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.year desc ,a.month
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DevelopmentStructure">
+		SELECT 
+			<include refid="developmentStructureColumns"/>
+		FROM development_structure a
+		<include refid="developmentStructureJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO development_structure(
+			id,
+			industry,
+			first,
+			second,
+			third,
+			`month`,
+			`year`
+		) VALUES (
+			#{id},
+			#{industry},
+			#{first},
+			#{second},
+			#{third},
+			#{month},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE development_structure SET 	
+			industry = #{industry},
+			first = #{first},
+			second = #{second},
+			third = #{third},
+			`month` = #{month},
+			`year` = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM development_structure
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

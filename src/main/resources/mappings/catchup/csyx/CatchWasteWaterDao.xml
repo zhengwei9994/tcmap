@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchWasteWaterDao">
+    
+	<sql id="catchWasteWaterColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.industry_value AS "industryValue",
+		a.city_value AS "cityValue",
+		a.farm_value AS "farmValue",
+		a.ammonia_value AS "ammoniaValue"
+	</sql>
+	
+	<sql id="catchWasteWaterJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchWasteWater">
+		SELECT 
+			<include refid="catchWasteWaterColumns"/>
+		FROM catch_waste_water a
+		<include refid="catchWasteWaterJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchWasteWater">
+		SELECT 
+			<include refid="catchWasteWaterColumns"/>
+		FROM catch_waste_water a
+		<include refid="catchWasteWaterJoins"/>
+		<where>
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchWasteWater">
+		SELECT 
+			<include refid="catchWasteWaterColumns"/>
+		FROM catch_waste_water a
+		<include refid="catchWasteWaterJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_waste_water(
+			id,
+			nyear,
+			industry_value,
+			city_value,
+			farm_value,
+			ammonia_value
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{industryValue},
+			#{cityValue},
+			#{farmValue},
+			#{ammoniaValue}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_waste_water(
+		id,
+		nyear,
+		industry_value,
+		city_value,
+		farm_value,
+		ammonia_value
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.industryValue},
+			#{item.cityValue},
+			#{item.farmValue},
+			#{item.ammoniaValue}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_waste_water SET 	
+			nyear = #{nyear},
+			industry_value = #{industryValue},
+			city_value = #{cityValue},
+			farm_value = #{farmValue},
+			ammonia_value = #{ammoniaValue}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_waste_water
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchSceniAreaDao">
+    
+	<sql id="catchSceniAreaColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.scenic_area AS "scenicArea",
+		a.total_revenue AS "totalRevenue",
+		a.growth AS "growth",
+		a.reception AS "reception"
+	</sql>
+	
+	<sql id="catchSceniAreaJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchSceniArea">
+		SELECT 
+			<include refid="catchSceniAreaColumns"/>
+		FROM catch_sceni_area a
+		<include refid="catchSceniAreaJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchSceniArea">
+		SELECT 
+			<include refid="catchSceniAreaColumns"/>
+		FROM catch_sceni_area a
+		<include refid="catchSceniAreaJoins"/>
+		<where>
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="scenicArea != null and scenicArea != ''">
+				AND a.scenic_area = #{scenicArea}
+			</if>	
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchSceniArea">
+		SELECT 
+			<include refid="catchSceniAreaColumns"/>
+		FROM catch_sceni_area a
+		<include refid="catchSceniAreaJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_sceni_area(
+			id,
+			nyear,
+			scenic_area,
+			total_revenue,
+			growth,
+			reception
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{scenicArea},
+			#{totalRevenue},
+			#{growth},
+			#{reception}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_sceni_area(
+		id,
+		nyear,
+		scenic_area,
+		total_revenue,
+		growth,
+		reception
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.scenicArea},
+			#{item.totalRevenue},
+			#{item.growth},
+			#{item.reception}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_sceni_area SET 	
+			nyear = #{nyear},
+			scenic_area = #{scenicArea},
+			total_revenue = #{totalRevenue},
+			growth = #{growth},
+			reception = #{reception}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_sceni_area
+		WHERE id = #{id}
+	</update>
+	<select id="scenicSpotData" resultType="CatchSceniArea">
+		SELECT
+		a.nyear AS "nyear",
+		a.scenic_area AS "scenicArea",
+		a.total_revenue AS "totalRevenue",
+		a.growth AS "growth",
+		a.reception AS "reception"
+        FROM catch_sceni_area a
+        <where>
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csly.dao.TouristSatisfactionDao">
+    
+	<sql id="touristSatisfactionColumns">
+		a.id AS "id",
+		a.senic AS "senic",
+		a.category AS "category",
+		a.num AS "num"
+	</sql>
+	
+	<sql id="touristSatisfactionJoins">
+	</sql>
+    
+	<select id="get" resultType="TouristSatisfaction">
+		SELECT 
+			<include refid="touristSatisfactionColumns"/>
+		FROM tourist_satisfaction a
+		<include refid="touristSatisfactionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TouristSatisfaction">
+		SELECT 
+			<include refid="touristSatisfactionColumns"/>
+		FROM tourist_satisfaction a
+		<include refid="touristSatisfactionJoins"/>
+		<where>
+			
+			<if test="senic != null and senic != ''">
+				AND a.senic = #{senic}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TouristSatisfaction">
+		SELECT 
+			<include refid="touristSatisfactionColumns"/>
+		FROM tourist_satisfaction a
+		<include refid="touristSatisfactionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tourist_satisfaction(
+			id,
+			senic,
+			category,
+			num
+		) VALUES (
+			#{id},
+			#{senic},
+			#{category},
+			#{num}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tourist_satisfaction SET 	
+			senic = #{senic},
+			category = #{category},
+			num = #{num}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tourist_satisfaction
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

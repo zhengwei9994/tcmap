@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.ShowVitalityDao">
+    
+	<sql id="showVitalityColumns">
+		a.id AS "id",
+		a.year AS "year",
+		a.vitality AS "vitality",
+		a.month as "month"
+	</sql>
+	
+	<sql id="showVitalityJoins">
+	</sql>
+    
+	<select id="get" resultType="ShowVitality">
+		SELECT 
+			<include refid="showVitalityColumns"/>
+		FROM show_vitality a
+		<include refid="showVitalityJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShowVitality">
+		SELECT 
+			<include refid="showVitalityColumns"/>
+		FROM show_vitality a
+		<include refid="showVitalityJoins"/>
+		<where>
+			
+			<if test="vitality != null and vitality != ''">
+				AND a.vitality = #{vitality}
+			</if>
+			<if test="year != null and year != ''">
+				and a.YEAR = #{year}
+			</if>
+			<if test="month != null and month != ''">
+				and a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.year desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShowVitality">
+		SELECT 
+			<include refid="showVitalityColumns"/>
+		FROM show_vitality a
+		<include refid="showVitalityJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO show_vitality(
+			id,
+			year,
+			vitality,
+			month
+		) VALUES (
+			#{id},
+			#{year},
+			#{vitality},
+			#{month}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE show_vitality SET 	
+			year = #{year},
+			vitality = #{vitality},
+			month = #{month}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM show_vitality
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

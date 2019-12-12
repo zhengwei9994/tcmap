@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csly.dao.TouristSoundVolumeDao">
+    
+	<sql id="touristSoundVolumeColumns">
+		a.id AS "id",
+		a.month AS "month",
+		a.num AS "num",
+		a.year AS "year"
+	</sql>
+	
+	<sql id="touristSoundVolumeJoins">
+	</sql>
+    
+	<select id="get" resultType="TouristSoundVolume">
+		SELECT 
+			<include refid="touristSoundVolumeColumns"/>
+		FROM tourist_sound_volume a
+		<include refid="touristSoundVolumeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TouristSoundVolume">
+		SELECT 
+			<include refid="touristSoundVolumeColumns"/>
+		FROM tourist_sound_volume a
+		<include refid="touristSoundVolumeJoins"/>
+		<where>
+			
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+			<if test="year != null and year != ''">
+				AND a.year = #{year}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TouristSoundVolume">
+		SELECT 
+			<include refid="touristSoundVolumeColumns"/>
+		FROM tourist_sound_volume a
+		<include refid="touristSoundVolumeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tourist_sound_volume(
+			id,
+			month,
+			num,
+			year
+		) VALUES (
+			#{id},
+			#{month},
+			#{num},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tourist_sound_volume SET 	
+			month = #{month},
+			num = #{num},
+			year = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tourist_sound_volume
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

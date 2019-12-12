@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.DevelopmentEvolutionDao">
+    
+	<sql id="developmentEvolutionColumns">
+		a.id AS "id",
+		a.industry AS "industry",
+		a.industry_num AS "industryNum",
+		a.industry_money AS "industryMoney",
+		a.year AS "year"
+	</sql>
+	
+	<sql id="developmentEvolutionJoins">
+	</sql>
+    
+	<select id="get" resultType="DevelopmentEvolution">
+		SELECT 
+			<include refid="developmentEvolutionColumns"/>
+		FROM development_evolution a
+		<include refid="developmentEvolutionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DevelopmentEvolution">
+		SELECT 
+			<include refid="developmentEvolutionColumns"/>
+		FROM development_evolution a
+		<include refid="developmentEvolutionJoins"/>
+		<where>
+			
+			<if test="industry != null and industry != ''">
+				AND a.industry = #{industry}
+			</if>
+			<if test="year != null and year != ''">
+				AND a.year = #{year}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DevelopmentEvolution">
+		SELECT 
+			<include refid="developmentEvolutionColumns"/>
+		FROM development_evolution a
+		<include refid="developmentEvolutionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO development_evolution(
+			id,
+			industry,
+			industry_num,
+			industry_money,
+			year
+		) VALUES (
+			#{id},
+			#{industry},
+			#{industryNum},
+			#{industryMoney},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE development_evolution SET 	
+			industry = #{industry},
+			industry_num = #{industryNum},
+			industry_money = #{industryMoney},
+			year = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM development_evolution
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

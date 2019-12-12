@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchInvestmentProgressDao">
+    
+	<sql id="catchInvestmentProgressColumn">
+		a.id AS "id",
+		a.project_name AS "projectName",
+		a.unit AS "unit",
+		a.completed_ratio AS "completedRatio",
+		a.annual_task AS "annualTask"
+	</sql>
+	
+	<sql id="catchInvestmentProgressJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchInvestmentProgress">
+		SELECT 
+			<include refid="catchInvestmentProgressColumn"/>
+		FROM catch_investment_progress a
+		<include refid="catchInvestmentProgressJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchInvestmentProgress">
+		SELECT 
+			<include refid="catchInvestmentProgressColumn"/>
+		FROM catch_investment_progress a
+		<include refid="catchInvestmentProgressJoins"/>
+		<where>
+			<if test="projectName != null and projectName != ''">
+				AND a.project_name = #{projectName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchInvestmentProgress">
+		SELECT 
+			<include refid="catchInvestmentProgressColumn"/>
+		FROM catch_investment_progress a
+		<include refid="catchInvestmentProgressJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_investment_progress(
+			id ,
+			project_name ,
+			unit ,
+			completed_ratio ,
+			annual_task
+		) VALUES (
+			#{id},
+			#{projectName},
+			#{unit},
+			#{completedRatio},
+			#{annualTask}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_investment_progress(
+		id ,
+		project_name ,
+		unit ,
+		completed_ratio ,
+		annual_task
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.projectName},
+			#{item.unit},
+			#{item.completedRatio},
+			#{item.annualTask}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_investment_progress SET
+			project_name  = #{projectName},
+			unit = #{unit},
+			completed_ratio   = #{completedRatio},
+			annual_task  = #{annualTask}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_investment_progress
+		WHERE id = #{id}
+	</update>
+
+</mapper>

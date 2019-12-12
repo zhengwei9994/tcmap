@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.LivePovertyTypeDao">
+    
+	<sql id="livePovertyTypeColumns">
+		a.id AS "id",
+		a.area AS "area",
+		a.type AS "type",
+		a.num AS "num"
+	</sql>
+	
+	<sql id="livePovertyTypeJoins">
+	</sql>
+    
+	<select id="get" resultType="LivePovertyType">
+		SELECT 
+			<include refid="livePovertyTypeColumns"/>
+		FROM live_poverty_type a
+		<include refid="livePovertyTypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="LivePovertyType">
+		SELECT 
+			<include refid="livePovertyTypeColumns"/>
+		FROM live_poverty_type a
+		<include refid="livePovertyTypeJoins"/>
+		<where>
+			<if test="type != null and type !=''">
+				and a.type = #{type}
+			</if>
+			<if test="area != null and area !=''">
+				and a.area = #{area}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by area
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LivePovertyType">
+		SELECT 
+			<include refid="livePovertyTypeColumns"/>
+		FROM live_poverty_type a
+		<include refid="livePovertyTypeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO live_poverty_type(
+			id,
+			area,
+			type,
+			num
+		) VALUES (
+			#{id},
+			#{area},
+			#{type},
+			#{num}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE live_poverty_type SET 	
+			area = #{area},
+			type = #{type},
+			num = #{num}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM live_poverty_type
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

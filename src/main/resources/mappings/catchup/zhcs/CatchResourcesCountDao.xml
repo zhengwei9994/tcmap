@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchResourcesCountDao">
+    
+	<sql id="catchResourcesCountColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.month as "month",
+		a.personnel_type AS "personnelType",
+		a.male AS "male",
+		a.female AS "female"
+	</sql>
+	
+	<sql id="catchResourcesCountJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchResourcesCount">
+		SELECT 
+			<include refid="catchResourcesCountColumns"/>
+		FROM catch_resources_count a
+		<include refid="catchResourcesCountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchResourcesCount">
+		SELECT 
+			<include refid="catchResourcesCountColumns"/>
+		FROM catch_resources_count a
+		<include refid="catchResourcesCountJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+			<if test="personnelType != null and personnelType != ''">
+				AND a.personnel_type = #{personnelType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by nyear desc,`month`
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchResourcesCount">
+		SELECT 
+			<include refid="catchResourcesCountColumns"/>
+		FROM catch_resources_count a
+		<include refid="catchResourcesCountJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_resources_count(
+			id,
+			nyear,
+			`month`,
+			personnel_type,
+			male,
+			female
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{month},
+			#{personnelType},
+			#{male},
+			#{female}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_resources_count SET 	
+			nyear = #{nyear},
+			`month` = #{month},
+			personnel_type = #{personnelType},
+			male = #{male},
+			female = #{female}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_resources_count
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteAll">
+		DELETE FROM catch_resources_count
+	</update>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_resources_count(
+		id,
+		nyear,
+		`month`,
+		personnel_type,
+		male,
+		female
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id}, #{item.nyear},#{item.month},	#{item.personnelType},#{item.male},#{item.female})
+		</foreach>
+	</insert>
+</mapper>

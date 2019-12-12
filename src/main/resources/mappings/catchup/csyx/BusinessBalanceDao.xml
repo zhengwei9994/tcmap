@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.BusinessBalanceDao">
+    
+	<sql id="businessBalanceColumns">
+		a.id AS "id",
+		a.balance AS "balance",
+		a.month AS "month",
+		a.year AS "year"
+	</sql>
+	
+	<sql id="businessBalanceJoins">
+	</sql>
+    
+	<select id="get" resultType="BusinessBalance">
+		SELECT 
+			<include refid="businessBalanceColumns"/>
+		FROM business_balance a
+		<include refid="businessBalanceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BusinessBalance">
+		SELECT 
+			<include refid="businessBalanceColumns"/>
+		FROM business_balance a
+		<include refid="businessBalanceJoins"/>
+		<where>
+			
+			<if test="balance != null and balance != ''">
+				AND a.balance = #{balance}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+			<if test="year != null and year != ''">
+				AND a.year = #{year}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    order by a.year desc ,a.month
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BusinessBalance">
+		SELECT 
+			<include refid="businessBalanceColumns"/>
+		FROM business_balance a
+		<include refid="businessBalanceJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+                order by `year` desc,`month`
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO business_balance(
+			id,
+			balance,
+			`month`,
+			`year`
+		) VALUES (
+			#{id},
+			#{balance},
+			#{month},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE business_balance SET 	
+			balance = #{balance},
+			`month` = #{month},
+			`year` = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM business_balance
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

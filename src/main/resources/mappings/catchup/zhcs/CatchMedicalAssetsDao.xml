@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchMedicalAssetsDao">
+    
+	<sql id="catchMedicalAssetsColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.month as "month",
+		a.hospital_grade AS "hospitalGrade",
+		a.hospital_number AS "hospitalNumber",
+		a.doctors_number AS "doctorsNumber",
+		a.nurse_number AS "nurseNumber"
+	</sql>
+	
+	<sql id="catchMedicalAssetsJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchMedicalAssets">
+		SELECT 
+			<include refid="catchMedicalAssetsColumns"/>
+		FROM catch_medical_assets a
+		<include refid="catchMedicalAssetsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchMedicalAssets">
+		SELECT 
+			<include refid="catchMedicalAssetsColumns"/>
+		FROM catch_medical_assets a
+		<include refid="catchMedicalAssetsJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="hospitalGrade != null and hospitalGrade != ''">
+				AND a.hospital_grade = #{hospitalGrade}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by nyear desc,`month`
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchMedicalAssets">
+		SELECT 
+			<include refid="catchMedicalAssetsColumns"/>
+		FROM catch_medical_assets a
+		<include refid="catchMedicalAssetsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_medical_assets(
+			id,
+			nyear,
+			`month`,
+			hospital_grade,
+			hospital_number,
+			doctors_number,
+			nurse_number
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{month },
+			#{hospitalGrade},
+			#{hospitalNumber},
+			#{doctorsNumber},
+			#{nurseNumber}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_medical_assets SET 	
+			nyear = #{nyear},
+			`month` = #{month},
+			hospital_grade = #{hospitalGrade},
+			hospital_number = #{hospitalNumber},
+			doctors_number = #{doctorsNumber},
+			nurse_number = #{nurseNumber}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_medical_assets
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteAll">
+		DELETE FROM catch_medical_assets
+	</update>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_medical_assets(
+		id,
+		nyear,
+		`month`,
+		hospital_grade,
+		hospital_number,
+		doctors_number,
+		nurse_number
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id}, #{item.nyear}, #{item.month},	#{item.hospitalGrade},#{item.hospitalNumber},#{item.doctorsNumber},#{item.nurseNumber})
+		</foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchLaborEmploymentDao">
+    
+	<sql id="catchLaborEmploymentColumns">
+		a.id AS "id",
+		a.kind AS "kind",
+		a.number AS "number",
+		a.proportion AS "proportion",
+		a.imagepath AS "imagepath"
+	</sql>
+	
+	<sql id="catchLaborEmploymentJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchLaborEmployment">
+		SELECT 
+			<include refid="catchLaborEmploymentColumns"/>
+		FROM catch_labor_employment a
+		<include refid="catchLaborEmploymentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchLaborEmployment">
+		SELECT 
+			<include refid="catchLaborEmploymentColumns"/>
+		FROM catch_labor_employment a
+		<include refid="catchLaborEmploymentJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchLaborEmployment">
+		SELECT 
+			<include refid="catchLaborEmploymentColumns"/>
+		FROM catch_labor_employment a
+		<include refid="catchLaborEmploymentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_labor_employment(
+			id,
+			kind,
+			number,
+			proportion,
+			imagepath
+		) VALUES (
+			#{id},
+			#{kind},
+			#{number},
+			#{proportion},
+			#{imagepath}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_labor_employment(
+			id,
+			kind,
+			number,
+			proportion,
+			imagepath
+		) VALUES  
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.kind},
+			#{item.number},
+			#{item.proportion},
+			#{item.imagepath}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_labor_employment SET 	
+			kind = #{kind},
+			number = #{number},
+			proportion = #{proportion},
+			imagepath = #{imagepath}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_labor_employment
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

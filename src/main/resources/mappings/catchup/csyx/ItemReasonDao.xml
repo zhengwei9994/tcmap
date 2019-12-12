@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.ItemReasonDao">
+    
+	<sql id="itemReasonColumns">
+		a.id AS "id",
+		a.reason AS "reason",
+		a.num AS "num",
+		a.year AS "year"
+	</sql>
+	
+	<sql id="itemReasonJoins">
+	</sql>
+    
+	<select id="get" resultType="ItemReason">
+		SELECT 
+			<include refid="itemReasonColumns"/>
+		FROM item_reason a
+		<include refid="itemReasonJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ItemReason">
+		SELECT 
+			<include refid="itemReasonColumns"/>
+		FROM item_reason a
+		<include refid="itemReasonJoins"/>
+		<where>
+			
+			<if test="reason != null and reason != ''">
+				AND a.reason = #{reason}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ItemReason">
+		SELECT 
+			<include refid="itemReasonColumns"/>
+		FROM item_reason a
+		<include refid="itemReasonJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO item_reason(
+			id,
+			reason,
+			num,
+			year
+		) VALUES (
+			#{id},
+			#{reason},
+			#{num},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE item_reason SET 	
+			reason = #{reason},
+			num = #{num},
+			year = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM item_reason
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

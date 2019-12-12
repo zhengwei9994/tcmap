@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchHumanResourcesDao">
+    
+	<sql id="catchHumanResourcesColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.company_type AS "companyType",
+		a.number_people AS "numberPeople"
+	</sql>
+	
+	<sql id="catchHumanResourcesJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchHumanResources">
+		SELECT 
+			<include refid="catchHumanResourcesColumns"/>
+		FROM catch_human_resources a
+		<include refid="catchHumanResourcesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchHumanResources">
+		SELECT 
+			<include refid="catchHumanResourcesColumns"/>
+		FROM catch_human_resources a
+		<include refid="catchHumanResourcesJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="companyType != null and companyType != ''">
+				AND a.company_type = #{companyType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchHumanResources">
+		SELECT 
+			<include refid="catchHumanResourcesColumns"/>
+		FROM catch_human_resources a
+		<include refid="catchHumanResourcesJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_human_resources(
+			id,
+			nyear,
+			company_type,
+			number_people
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{companyType},
+			#{numberPeople}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_human_resources(
+			id,
+			nyear,
+			company_type,
+			number_people
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.nyear},
+			#{item.companyType},
+			#{item.numberPeople}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_human_resources SET 	
+			nyear = #{nyear},
+			company_type = #{companyType},
+			number_people = #{numberPeople}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_human_resources
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

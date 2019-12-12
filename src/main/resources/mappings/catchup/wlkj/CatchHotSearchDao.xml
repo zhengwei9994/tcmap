@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.wlkj.dao.CatchHotSearchDao">
+    
+	<sql id="catchHotSearchColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.link AS "link",
+		a.sort AS "sort"
+	</sql>
+	
+	<sql id="catchHotSearchJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchHotSearch">
+		SELECT 
+			<include refid="catchHotSearchColumns"/>
+		FROM catch_hot_search a
+		<include refid="catchHotSearchJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchHotSearch">
+		SELECT 
+			<include refid="catchHotSearchColumns"/>
+		FROM catch_hot_search a
+		<include refid="catchHotSearchJoins"/>
+		<where>
+			<if test="sort != null and sort != ''">
+				AND a.sort = #{sort}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchHotSearch">
+		SELECT 
+			<include refid="catchHotSearchColumns"/>
+		FROM catch_hot_search a
+		<include refid="catchHotSearchJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_hot_search(
+			id,
+			name,
+			link,
+			sort
+		) VALUES (
+			#{id},
+			#{name},
+			#{link},
+			#{sort}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_hot_search SET 	
+			name = #{name},
+			link = #{link},
+			sort = #{sort}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_hot_search
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

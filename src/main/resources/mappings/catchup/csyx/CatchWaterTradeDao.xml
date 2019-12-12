@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchWaterTradeDao">
+    
+	<sql id="catchWaterTradeColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.process_max AS "processMax",
+		a.speed_max AS "speedMax"
+	</sql>
+	
+	<sql id="catchWaterTradeJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchWaterTrade">
+		SELECT 
+			<include refid="catchWaterTradeColumns"/>
+		FROM catch_water_trade a
+		<include refid="catchWaterTradeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchWaterTrade">
+		SELECT 
+			<include refid="catchWaterTradeColumns"/>
+		FROM catch_water_trade a
+		<include refid="catchWaterTradeJoins"/>
+		<where>
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchWaterTrade">
+		SELECT 
+			<include refid="catchWaterTradeColumns"/>
+		FROM catch_water_trade a
+		<include refid="catchWaterTradeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_water_trade(
+			id,
+			nyear,
+			process_max,
+			speed_max
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{processMax},
+			#{speedMax}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_water_trade(
+		id,
+		nyear,
+		process_max,
+		speed_max
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.nyear},
+			#{item.processMax},
+			#{item.speedMax}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_water_trade SET 	
+			nyear = #{nyear},
+			process_max = #{processMax},
+			speed_max = #{speedMax}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_water_trade
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

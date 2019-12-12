@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csly.dao.TouristsSourcesDao">
+    
+	<sql id="touristsSourcesColumns">
+		a.id AS "id",
+		a.province AS "province",
+		a.num AS "num"
+	</sql>
+	
+	<sql id="touristsSourcesJoins">
+	</sql>
+    
+	<select id="get" resultType="TouristsSources">
+		SELECT 
+			<include refid="touristsSourcesColumns"/>
+		FROM tourists_sources a
+		<include refid="touristsSourcesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TouristsSources">
+		SELECT 
+			<include refid="touristsSourcesColumns"/>
+		FROM tourists_sources a
+		<include refid="touristsSourcesJoins"/>
+		<where>
+			
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TouristsSources">
+		SELECT 
+			<include refid="touristsSourcesColumns"/>
+		FROM tourists_sources a
+		<include refid="touristsSourcesJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tourists_sources(
+			id,
+			province,
+			num
+		) VALUES (
+			#{id},
+			#{province},
+			#{num}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tourists_sources SET 	
+			province = #{province},
+			num = #{num}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tourists_sources
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

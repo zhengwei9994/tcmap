@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.wlkj.dao.CatchMediaHydDao">
+    
+	<sql id="catchMediaHydColumns">
+		a.id AS "id",
+		a.legend AS "legend",
+		a.number AS "number"
+	</sql>
+	
+	<sql id="catchMediaHydJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchMediaHyd">
+		SELECT 
+			<include refid="catchMediaHydColumns"/>
+		FROM catch_media_hyd a
+		<include refid="catchMediaHydJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchMediaHyd">
+		SELECT 
+			<include refid="catchMediaHydColumns"/>
+		FROM catch_media_hyd a
+		<include refid="catchMediaHydJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy} desc
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchMediaHyd">
+		SELECT 
+			<include refid="catchMediaHydColumns"/>
+		FROM catch_media_hyd a
+		<include refid="catchMediaHydJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_media_hyd(
+			id,
+			legend,
+			number
+		) VALUES (
+			#{id},
+			#{legend},
+			#{number}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_media_hyd SET 	
+			legend = #{legend},
+			number = #{number}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_media_hyd
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

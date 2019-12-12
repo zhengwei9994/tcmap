@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchKeyprojectClassDao">
+    
+	<sql id="catchKeyprojectClassColumns">
+		a.id AS "id",
+		a.keyproject_id AS "keyprojectId.id",
+		b.total_investment AS "keyprojectId.totalInvestment",
+		a.month AS "month",
+		a.amount_completed AS "amountCompleted",
+		a.unit AS "unit",
+		a.completion_ratio AS "completionRatio",
+		a.project_status AS "projectStatus"
+
+	</sql>
+	
+	<sql id="catchKeyprojectClassJoins">
+		LEFT JOIN catch_keyproject b ON b.id = a.keyproject_id
+	</sql>
+    
+	<select id="get" resultType="CatchKeyprojectClass">
+		SELECT 
+			<include refid="catchKeyprojectClassColumns"/>
+		FROM catch_keyproject_class a
+		<include refid="catchKeyprojectClassJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchKeyprojectClass">
+		SELECT 
+			<include refid="catchKeyprojectClassColumns"/>
+		FROM catch_keyproject_class a
+		<include refid="catchKeyprojectClassJoins"/>
+		<where>
+			<if test="keyprojectId != null and keyprojectId.id != ''">
+				AND a.keyproject_id = #{keyprojectId.id}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchKeyprojectClass">
+		SELECT 
+			<include refid="catchKeyprojectClassColumns"/>
+		FROM catch_keyproject_class a
+		<include refid="catchKeyprojectClassJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_keyproject_class(
+			id,
+			keyproject_id,
+			month,
+			amount_completed,
+			unit,
+			completion_ratio,
+			project_status
+		) VALUES (
+			#{id},
+			#{keyprojectId.id},
+			#{month},
+			#{amountCompleted},
+			#{unit},
+			#{completionRatio},
+			#{projectStatus}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_keyproject_class(
+		id,
+		keyproject_id,
+		month,
+		amount_completed,
+		unit,
+		completion_ratio,
+		project_status
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.keyprojectId.id},
+			#{item.month},
+			#{item.amountCompleted},
+			#{item.unit},
+			#{item.completionRatio},
+			#{item.projectStatus}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_keyproject_class SET 	
+			keyproject_id = #{keyprojectId.id},
+			month = #{month},
+			amount_completed = #{amountCompleted},
+			unit = #{unit},
+			completion_ratio = #{completionRatio},
+			project_status = #{projectStatus}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_keyproject_class
+		WHERE id = #{id}
+	</update>
+
+	<select id="totalData" resultType="java.util.HashMap">
+		select
+		a.month AS "month",
+		ROUND(sum(a.amount_completed)/10000,2) AS "amountCompleted",
+		ROUND(ROUND(sum(a.amount_completed)/10000,2)/(SELECT c.planned_investment FROM catch_plan_investment  c <where><if test="nyear != null and nyear != ''">
+		 c.nyear = #{nyear}</if></where>)*100,2) AS "zhanbi",
+		a.unit AS "unit"
+        FROM catch_keyproject_class  a
+	    LEFT JOIN catch_keyproject b ON b.id = a.keyproject_id
+        <where>
+			a.month = (SELECT MAX(a.month) FROM catch_keyproject_class a where  a.keyproject_id= b.id)
+			<if test="nyear != null and nyear != ''">
+				AND b.nyear = #{nyear}
+			</if>
+		</where>
+	</select>
+	<select id="keyprojectNum" resultType="java.util.HashMap">
+		select
+		COUNT(a.project_status) AS "projectStatus"
+        FROM catch_keyproject_class  a
+	   LEFT JOIN catch_keyproject b ON b.id = a.keyproject_id
+	   <where>
+		   a.project_status='已完成'
+		   <if test="nyear != null and nyear != ''">
+			   AND b.nyear = #{nyear}
+		   </if>
+	   </where>
+	</select>
+	<select id="keyprojectProgress" resultType="java.util.HashMap">
+		select
+		b.entry_name AS "name",
+		b.total_investment AS "totalInvestment",
+		a.amount_completed AS "amountCompleted",
+		a.unit AS "unit",
+		a.completion_ratio AS "completionRatio"
+        FROM catch_keyproject_class  a
+        LEFT JOIN catch_keyproject b ON b.id = a.keyproject_id
+        where a.month = (SELECT MAX(a.month) FROM catch_keyproject_class a where  a.keyproject_id= b.id) AND b.nyear = #{nyear}
+       LIMIT 3
+	</select>
+</mapper>

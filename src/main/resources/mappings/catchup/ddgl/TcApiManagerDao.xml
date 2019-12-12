@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.ddgl.dao.TcApiManagerDao">
+    
+	<sql id="tcApiManagerColumns">
+		a.id AS "id",
+		a.api_name AS "apiName",
+		a.api_url AS "apiUrl",
+		a.api_type AS "apiType",
+		a.request_type AS "requestType",
+		a.api_des AS "apiDes",
+		a.request_param AS "requestParam",
+		a.return_param AS "returnParam",
+		a.api_status AS "apiStatus",
+		a.release_time AS "releaseTime",
+		a.sys_domain AS "sysDomain"
+	</sql>
+	
+	<sql id="tcApiManagerJoins">
+      LEFT  JOIN tc_syservice_mananger a2 on a2.id =a.sys_domain
+	</sql>
+    
+	<select id="get" resultType="TcApiManager">
+		SELECT 
+			<include refid="tcApiManagerColumns"/>
+		FROM tc_api_manager a
+		<include refid="tcApiManagerJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TcApiManager">
+		SELECT 
+			<include refid="tcApiManagerColumns"/>
+		FROM tc_api_manager a
+		<include refid="tcApiManagerJoins"/>
+		<where>
+			
+			<if test="apiName != null and apiName != ''">
+				AND a.api_name = #{apiName}
+			</if>
+			<if test="apiType != null and apiType != ''">
+				AND a.api_type = #{apiType}
+			</if>
+			<if test="apiStatus != null and apiStatus != ''">
+				AND a.api_status = #{apiStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TcApiManager">
+		SELECT 
+			<include refid="tcApiManagerColumns"/>
+		FROM tc_api_manager a
+		<include refid="tcApiManagerJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tc_api_manager(
+			id,
+			api_name,
+			api_url,
+			api_type,
+			request_type,
+			api_des,
+			request_param,
+			return_param,
+			api_status,
+			release_time,
+			sys_domain
+		) VALUES (
+			#{id},
+			#{apiName},
+			#{apiUrl},
+			#{apiType},
+			#{requestType},
+			#{apiDes},
+			#{requestParam},
+			#{returnParam},
+			#{apiStatus},
+			#{releaseTime},
+			#{sysDomain}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tc_api_manager SET 	
+			api_name = #{apiName},
+			api_url = #{apiUrl},
+			api_type = #{apiType},
+			request_type = #{requestType},
+			api_des = #{apiDes},
+			request_param = #{requestParam},
+			return_param = #{returnParam},
+			api_status = #{apiStatus},
+			release_time = #{releaseTime},
+			sys_domain = #{sysDomain}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tc_api_manager
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

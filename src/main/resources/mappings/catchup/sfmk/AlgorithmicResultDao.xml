@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.sfmk.dao.AlgorithmicResultDao">
+    
+	<sql id="algorithmicResultColumns">
+		a.id AS "id",
+		a.example_id AS "exampleId",
+		a.result_name AS "resultName",
+		a.result AS "result"
+	</sql>
+	
+	<sql id="algorithmicResultJoins">
+	</sql>
+    
+	<select id="get" resultType="AlgorithmicResult">
+		SELECT 
+			<include refid="algorithmicResultColumns"/>
+		FROM algorithmic_result a
+		<include refid="algorithmicResultJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AlgorithmicResult">
+		SELECT 
+			<include refid="algorithmicResultColumns"/>
+		FROM algorithmic_result a
+		<include refid="algorithmicResultJoins"/>
+		<where>
+			<if test="id != null and id!=''">
+				and id = #{id}
+			</if>
+			<if test="exampleId != null and exampleId!=''">
+				and example_id = #{example_id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AlgorithmicResult">
+		SELECT 
+			<include refid="algorithmicResultColumns"/>
+		FROM algorithmic_result a
+		<include refid="algorithmicResultJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO algorithmic_result(
+			id,
+			example_id,
+			result_name,
+			result
+		) VALUES (
+			#{id},
+			#{exampleId},
+			#{resultName},
+			#{result}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE algorithmic_result SET 	
+			example_id = #{exampleId},
+			result_name = #{resultName},
+			result = #{result}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM algorithmic_result
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

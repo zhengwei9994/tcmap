@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.jkgl.dao.TcDangerMonitorDao">
+    
+	<sql id="tcDangerMonitorColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.code AS "code",
+		a.representative AS "representative",
+		a.adress AS "adress",
+		a.contact_information AS "contactInformation",
+		a.industry AS "industry",
+		a.pollutants_type AS "pollutantsType",
+		a.pollutants_name AS "pollutantsName",
+		a.emissions AS "emissions",
+		a.is_over AS "isOver",
+		a.danger_grade AS "dangerGrade"
+	</sql>
+	
+	<sql id="tcDangerMonitorJoins">
+	</sql>
+    
+	<select id="get" resultType="TcDangerMonitor">
+		SELECT 
+			<include refid="tcDangerMonitorColumns"/>
+		FROM tc_danger_monitor a
+		<include refid="tcDangerMonitorJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TcDangerMonitor">
+		SELECT 
+			<include refid="tcDangerMonitorColumns"/>
+		FROM tc_danger_monitor a
+		<include refid="tcDangerMonitorJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="isOver != null and isOver != ''">
+				AND a.is_over = #{isOver}
+			</if>
+			<if test="dangerGrade != null and dangerGrade != ''">
+				AND a.danger_grade = #{dangerGrade}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TcDangerMonitor">
+		SELECT 
+			<include refid="tcDangerMonitorColumns"/>
+		FROM tc_danger_monitor a
+		<include refid="tcDangerMonitorJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tc_danger_monitor(
+			id,
+			name,
+			code,
+			representative,
+			adress,
+			contact_information,
+			industry,
+			pollutants_type,
+			pollutants_name,
+			emissions,
+			is_over,
+			danger_grade
+		) VALUES (
+			#{id},
+			#{name},
+			#{code},
+			#{representative},
+			#{adress},
+			#{contactInformation},
+			#{industry},
+			#{pollutantsType},
+			#{pollutantsName},
+			#{emissions},
+			#{isOver},
+			#{dangerGrade}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tc_danger_monitor SET 	
+			name = #{name},
+			code = #{code},
+			representative = #{representative},
+			adress = #{adress},
+			contact_information = #{contactInformation},
+			industry = #{industry},
+			pollutants_type = #{pollutantsType},
+			pollutants_name = #{pollutantsName},
+			emissions = #{emissions},
+			is_over = #{isOver},
+			danger_grade = #{dangerGrade}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tc_danger_monitor
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

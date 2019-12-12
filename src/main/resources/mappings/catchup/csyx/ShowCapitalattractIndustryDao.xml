@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.ShowCapitalattractIndustryDao">
+    
+	<sql id="showCapitalattractIndustryColumns">
+		a.id AS "id",
+		a.industry AS "industry",
+		a.proportion AS "proportion",
+		a.year AS "year",
+		a.MONTH as "month"
+	</sql>
+	
+	<sql id="showCapitalattractIndustryJoins">
+	</sql>
+    
+	<select id="get" resultType="ShowCapitalattractIndustry">
+		SELECT 
+			<include refid="showCapitalattractIndustryColumns"/>
+		FROM show_capitalattract_industry a
+		<include refid="showCapitalattractIndustryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShowCapitalattractIndustry">
+		SELECT 
+			<include refid="showCapitalattractIndustryColumns"/>
+		FROM show_capitalattract_industry a
+		<include refid="showCapitalattractIndustryJoins"/>
+		<where>
+			
+			<if test="industry != null and industry != ''">
+				AND a.industry = #{industry}
+			</if>
+			<if test="year != null and year != ''">
+				and a.year = #{year}
+			</if>
+			<if test="month != null and month != ''">
+				and a.month = #{month}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.year desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShowCapitalattractIndustry">
+		SELECT 
+			<include refid="showCapitalattractIndustryColumns"/>
+		FROM show_capitalattract_industry a
+		<include refid="showCapitalattractIndustryJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO show_capitalattract_industry(
+			id,
+			industry,
+			proportion,
+			year,
+			month
+		) VALUES (
+			#{id},
+			#{industry},
+			#{proportion},
+			#{year},
+			#{month}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE show_capitalattract_industry SET 	
+			industry = #{industry},
+			proportion = #{proportion},
+			year = #{year},
+			month = month
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM show_capitalattract_industry
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

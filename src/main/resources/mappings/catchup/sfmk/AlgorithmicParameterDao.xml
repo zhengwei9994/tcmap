@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.sfmk.dao.AlgorithmicParameterDao">
+    
+	<sql id="algorithmicParameterColumns">
+		a.id AS "id",
+		a.algorithmicid AS "algorithmicid",
+		a.parametername AS "parametername",
+		a.parametertype AS "parametertype"
+	</sql>
+	
+	<sql id="algorithmicParameterJoins">
+	</sql>
+    
+	<select id="get" resultType="AlgorithmicParameter">
+		SELECT 
+			<include refid="algorithmicParameterColumns"/>
+		FROM algorithmic_parameter a
+		<include refid="algorithmicParameterJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AlgorithmicParameter">
+		SELECT 
+			<include refid="algorithmicParameterColumns"/>
+		FROM algorithmic_parameter a
+		<include refid="algorithmicParameterJoins"/>
+		<where>
+			
+			<if test="algorithmicid != null and algorithmicid != ''">
+				AND a.algorithmicid = #{algorithmicid}
+			</if>
+			<if test="parametername != null and parametername != ''">
+				AND a.parametername LIKE 
+					<if test="dbName == 'oracle'">'%'||#{parametername}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{parametername}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{parametername},'%')</if>
+			</if>
+			<if test="parametertype != null and parametertype != ''">
+				AND a.parametertype LIKE 
+					<if test="dbName == 'oracle'">'%'||#{parametertype}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{parametertype}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{parametertype},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AlgorithmicParameter">
+		SELECT 
+			<include refid="algorithmicParameterColumns"/>
+		FROM algorithmic_parameter a
+		<include refid="algorithmicParameterJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO algorithmic_parameter(
+			id,
+			algorithmicid,
+			parametername,
+			parametertype
+		) VALUES (
+			#{id},
+			#{algorithmicid},
+			#{parametername},
+			#{parametertype}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE algorithmic_parameter SET 	
+			algorithmicid = #{algorithmicid},
+			parametername = #{parametername},
+			parametertype = #{parametertype}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM algorithmic_parameter
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

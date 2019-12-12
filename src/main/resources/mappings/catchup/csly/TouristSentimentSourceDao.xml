@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csly.dao.TouristSentimentSourceDao">
+    
+	<sql id="touristSentimentSourceColumns">
+		a.id AS "id",
+		a.source AS "source",
+		a.num AS "num"
+	</sql>
+	
+	<sql id="touristSentimentSourceJoins">
+	</sql>
+    
+	<select id="get" resultType="TouristSentimentSource">
+		SELECT 
+			<include refid="touristSentimentSourceColumns"/>
+		FROM tourist_sentiment_source a
+		<include refid="touristSentimentSourceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TouristSentimentSource">
+		SELECT 
+			<include refid="touristSentimentSourceColumns"/>
+		FROM tourist_sentiment_source a
+		<include refid="touristSentimentSourceJoins"/>
+		<where>
+			
+			<if test="source != null and source != ''">
+				AND a.source LIKE 
+					<if test="dbName == 'oracle'">'%'||#{source}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{source}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{source},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TouristSentimentSource">
+		SELECT 
+			<include refid="touristSentimentSourceColumns"/>
+		FROM tourist_sentiment_source a
+		<include refid="touristSentimentSourceJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tourist_sentiment_source(
+			id,
+			source,
+			num
+		) VALUES (
+			#{id},
+			#{source},
+			#{num}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tourist_sentiment_source SET 	
+			source = #{source},
+			num = #{num}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tourist_sentiment_source
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

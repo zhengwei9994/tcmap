@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchSalaryStructureDao">
+    
+	<sql id="catchSalaryStructureColumns">
+		a.id AS "id",
+		a.date AS "date",
+		a.junior AS "junior",
+		a.technical AS "technical",
+		a.college AS "college",
+		a.ducation AS "ducation"
+	</sql>
+	
+	<sql id="catchSalaryStructureJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchSalaryStructure">
+		SELECT 
+			<include refid="catchSalaryStructureColumns"/>
+		FROM catch_salary_structure a
+		<include refid="catchSalaryStructureJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchSalaryStructure">
+		SELECT 
+			<include refid="catchSalaryStructureColumns"/>
+		FROM catch_salary_structure a
+		<include refid="catchSalaryStructureJoins"/>
+		<where>
+			
+			<if test="date != null and date != ''">
+				AND a.date = #{date}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchSalaryStructure">
+		SELECT 
+			<include refid="catchSalaryStructureColumns"/>
+		FROM catch_salary_structure a
+		<include refid="catchSalaryStructureJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_salary_structure(
+			id,
+			date,
+			junior,
+			technical,
+			college,
+			ducation
+		) VALUES (
+			#{id},
+			#{date},
+			#{junior},
+			#{technical},
+			#{college},
+			#{ducation}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_salary_structure(
+			id,
+			date,
+			junior,
+			technical,
+			college,
+			ducation
+		) VALUES 
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.date},
+			#{item.junior},
+			#{item.technical},
+			#{item.college},
+			#{item.ducation}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_salary_structure SET 	
+			date = #{date},
+			junior = #{junior},
+			technical = #{technical},
+			college = #{college},
+			ducation = #{ducation}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_salary_structure
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

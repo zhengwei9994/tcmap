@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchScenicSpotDao">
+    
+	<sql id="catchScenicSpotColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.spot_type AS "spotType",
+		a.spot_name AS "spotName",
+		a.display_position AS "displayPosition"
+	</sql>
+	
+	<sql id="catchScenicSpotJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchScenicSpot">
+		SELECT 
+			<include refid="catchScenicSpotColumns"/>
+		FROM catch_scenic_spot a
+		<include refid="catchScenicSpotJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchScenicSpot">
+		SELECT 
+			<include refid="catchScenicSpotColumns"/>
+		FROM catch_scenic_spot a
+		<include refid="catchScenicSpotJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="spotType != null and spotType != ''">
+				AND a.spot_type = #{spotType}
+			</if>
+			<if test="spotName != null and spotName != ''">
+				AND a.spot_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{spotName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{spotName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{spotName},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+
+			</otherwise>
+
+		</choose>
+		ORDER BY a.display_position
+	</select>
+
+	<select id="totalData" resultType="java.util.HashMap">
+		SELECT
+		a.spot_type AS typeName,
+		count(*) AS total
+		FROM catch_scenic_spot a
+		<include refid="catchScenicSpotJoins"/>
+		<where>
+
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			GROUP BY a.spot_type
+		</where>
+
+	</select>
+	
+	<select id="findAllList" resultType="CatchScenicSpot">
+		SELECT 
+			<include refid="catchScenicSpotColumns"/>
+		FROM catch_scenic_spot a
+		<include refid="catchScenicSpotJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+
+			</otherwise>
+		</choose>
+		ORDER BY a.display_position
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_scenic_spot(
+			id,
+			nyear,
+			spot_type,
+			spot_name,
+			display_position
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{spotType},
+			#{spotName},
+			#{displayPosition}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_scenic_spot SET 	
+			nyear = #{nyear},
+			spot_type = #{spotType},
+			spot_name = #{spotName},
+			display_position = #{displayPosition}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_scenic_spot
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteAll">
+		DELETE FROM catch_scenic_spot
+	</update>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_scenic_spot(
+		id,
+		nyear,
+		spot_type,
+		spot_name,
+		display_position
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id}, #{item.nyear},	#{item.spotType},#{item.spotName},#{item.displayPosition})
+		</foreach>
+	</insert>
+</mapper>

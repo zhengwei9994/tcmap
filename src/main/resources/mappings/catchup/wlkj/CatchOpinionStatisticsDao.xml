@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.wlkj.dao.CatchOpinionStatisticsDao">
+    
+	<sql id="catchOpinionStatisticsColumns">
+		a.id AS "id",
+		a.statistical_type AS "statisticalType",
+		a.index_positive AS "indexPositive",
+		a.index_the AS "indexThe",
+		a.index_negative AS "indexNegative",
+		a.total_netizen AS "totalNetizen",
+		a.total_media AS "totalMedia",
+		a.date_entry AS "dateEntry"
+	</sql>
+	
+	<sql id="catchOpinionStatisticsJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchOpinionStatistics">
+		SELECT 
+			<include refid="catchOpinionStatisticsColumns"/>
+		FROM catch_opinion_statistics a
+		<include refid="catchOpinionStatisticsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchOpinionStatistics">
+		SELECT 
+			<include refid="catchOpinionStatisticsColumns"/>
+		FROM catch_opinion_statistics a
+		<include refid="catchOpinionStatisticsJoins"/>
+		<where>
+			<if test="statisticalType != null and statisticalType != ''" >
+				AND a.statistical_type = #{statisticalType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchOpinionStatistics">
+		SELECT 
+			<include refid="catchOpinionStatisticsColumns"/>
+		FROM catch_opinion_statistics a
+		<include refid="catchOpinionStatisticsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_opinion_statistics(
+			id,
+			statistical_type,
+			index_positive,
+			index_the,
+			index_negative,
+			total_netizen,
+			total_media,
+			date_entry
+		) VALUES (
+			#{id},
+			#{statisticalType},
+			#{indexPositive},
+			#{indexThe},
+			#{indexNegative},
+			#{totalNetizen},
+			#{totalMedia},
+			#{dateEntry}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_opinion_statistics SET 	
+			statistical_type = #{statisticalType},
+			index_positive = #{indexPositive},
+			index_the = #{indexThe},
+			index_negative = #{indexNegative},
+			total_netizen = #{totalNetizen},
+			total_media = #{totalMedia},
+			date_entry = #{dateEntry}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_opinion_statistics
+		WHERE id = #{id}
+	</update>
+	<select id="opinionStatistics" resultType="CatchOpinionStatistics">
+		SELECT
+		max(a.date_entry) AS "dateEntry",
+		a.statistical_type AS "statisticalType",
+		a.index_positive AS "indexPositive",
+		a.index_the AS "indexThe",
+		a.index_negative AS "indexNegative",
+		a.total_netizen AS "totalNetizen",
+		a.total_media AS "totalMedia"
+		FROM catch_opinion_statistics a
+	    GROUP BY a.statistical_type
+	</select>
+</mapper>

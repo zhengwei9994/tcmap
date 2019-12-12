@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchProblemDisposalDao">
+    
+	<sql id="catchProblemDisposalColumn">
+		a.id AS "id",
+		a.project_name AS "projectName",
+		a.host_unit AS "hostUnit",
+		a.leadership AS "leadership",
+		a.problem_disposal AS "problemDisposal"
+	</sql>
+	
+	<sql id="catchProblemDisposalJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchProblemDisposal">
+		SELECT 
+			<include refid="catchProblemDisposalColumn"/>
+		FROM catch_problem_disposal a
+		<include refid="catchProblemDisposalJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchProblemDisposal">
+		SELECT 
+			<include refid="catchProblemDisposalColumn"/>
+		FROM catch_problem_disposal a
+		<include refid="catchProblemDisposalJoins"/>
+		<where>
+			<if test="projectName != null and projectName != ''">
+				AND a.project_name = #{projectName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchProblemDisposal">
+		SELECT 
+			<include refid="catchProblemDisposalColumn"/>
+		FROM catch_problem_disposal a
+		<include refid="catchProblemDisposalJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_problem_disposal(
+			id ,
+			project_name ,
+			leadership ,
+			host_unit ,
+			problem_disposal
+		) VALUES (
+			#{id},
+			#{projectName},
+			#{leadership},
+			#{hostUnit},
+			#{problemDisposal}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_problem_disposal(
+		id ,
+		project_name ,
+		leadership ,
+		host_unit ,
+		problem_disposal
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.projectName},
+			#{item.leadership},
+			#{item.hostUnit},
+			#{item.problemDisposal}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_problem_disposal SET
+			project_name  = #{projectName},
+			leadership = #{leadership},
+			host_unit   = #{hostUnit},
+			problem_disposal  = #{problemDisposal}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_problem_disposal
+		WHERE id = #{id}
+	</update>
+
+</mapper>

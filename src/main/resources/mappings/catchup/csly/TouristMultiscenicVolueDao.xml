@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csly.dao.TouristMultiscenicVolueDao">
+    
+	<sql id="touristMultiscenicVolueColumns">
+		a.id AS "id",
+		a.month AS "month",
+		a.year AS "year",
+		a.brand AS "brand",
+		a.scenic AS "scenic",
+		a.volue AS "volue"
+	</sql>
+	
+	<sql id="touristMultiscenicVolueJoins">
+	</sql>
+    
+	<select id="get" resultType="TouristMultiscenicVolue">
+		SELECT 
+			<include refid="touristMultiscenicVolueColumns"/>
+		FROM tourist_multiscenic_volue a
+		<include refid="touristMultiscenicVolueJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TouristMultiscenicVolue">
+		SELECT 
+			<include refid="touristMultiscenicVolueColumns"/>
+		FROM tourist_multiscenic_volue a
+		<include refid="touristMultiscenicVolueJoins"/>
+		<where>
+			<if test="scenic != null and scenic !=''">
+				and scenic = #{scenic}
+			</if>
+			<if test="month != null and month !=''">
+				and month = #{month}
+			</if>
+			<if test="year != null and year !=''">
+				and year = #{year}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			order by a.year desc ,a.month,a.scenic
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TouristMultiscenicVolue">
+		SELECT 
+			<include refid="touristMultiscenicVolueColumns"/>
+		FROM tourist_multiscenic_volue a
+		<include refid="touristMultiscenicVolueJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tourist_multiscenic_volue(
+			id,
+			month,
+			year,
+			brand,
+			scenic,
+			volue
+		) VALUES (
+			#{id},
+			#{month},
+			#{year},
+			#{brand},
+			#{scenic},
+			#{volue}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tourist_multiscenic_volue SET 	
+			month = #{month},
+			year = #{year},
+			brand = #{brand},
+			scenic = #{scenic},
+			volue = #{volue}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tourist_multiscenic_volue
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

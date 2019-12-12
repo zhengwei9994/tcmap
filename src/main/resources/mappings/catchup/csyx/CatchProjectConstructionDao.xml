@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchProjectConstructionDao">
+    
+	<sql id="catchProjectConstructionColumn">
+		a.id AS "id",
+		a.project_name AS "projectName",
+		a.leadership AS "leadership",
+		a.start_time AS "startTime",
+		a.annual_task AS "annualTask",
+		a.planned_investment AS "plannedInvestment",
+		a.progress AS "progress",
+		a.project_intro AS "projectIntro",
+		a.host_unit AS "hostUnit",
+		a.image_path AS "imagePath",
+		a.leader_image_path as "leaderImagePath"
+	</sql>
+	
+	<sql id="catchProjectConstructionJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchProjectConstruction">
+		SELECT 
+			<include refid="catchProjectConstructionColumn"/>
+		FROM catch_project_construction a
+		<include refid="catchProjectConstructionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchProjectConstruction">
+		SELECT 
+			<include refid="catchProjectConstructionColumn"/>
+		FROM catch_project_construction a
+		<include refid="catchProjectConstructionJoins"/>
+		<where>
+			<if test="projectName != null and projectName != ''">
+				AND a.project_name = #{projectName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchProjectConstruction">
+		SELECT 
+			<include refid="catchProjectConstructionColumn"/>
+		FROM catch_project_construction a
+		<include refid="catchProjectConstructionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_project_construction(
+			id ,
+			project_name ,
+			leadership ,
+			start_time ,
+			annual_task,
+			planned_investment ,
+			progress ,
+			project_intro,
+			host_unit,
+			image_path,
+			leader_image_path
+		) VALUES (
+			#{id},
+			#{projectName},
+			#{leadership},
+			#{startTime},
+			#{annualTask},
+			#{plannedInvestment},
+			#{progress},
+			#{projectIntro},
+			#{hostUnit},
+			#{imagePath},
+			#{leaderImagePath}
+		)
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_project_construction(
+		id ,
+		project_name ,
+		leadership ,
+		start_time ,
+		annual_task,
+		planned_investment ,
+		progress ,
+		project_intro,
+		host_unit,
+		image_path,
+		leader_image_path
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.projectName},
+			#{item.leadership},
+			#{item.startTime},
+			#{item.annualTask},
+			#{item.plannedInvestment},
+			#{item.progress},
+			#{item.projectIntro},
+			#{item.hostUnit},
+			#{item.imagePath},
+			#{leaderImagePath}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_project_construction SET
+			project_name  = #{projectName},
+			leadership = #{leadership},
+			start_time   = #{startTime},
+			annual_task  = #{annualTask},
+			planned_investment  = #{plannedInvestment},
+			progress  = #{progress},
+			project_intro = #{projectIntro},
+			host_unit = #{hostUnit},
+			image_path = #{imagePath},
+			leader_image_path = #{leaderImagePath}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_project_construction
+		WHERE id = #{id}
+	</update>
+
+	<select id="CatchProjectConstructionData" resultType="CatchProjectConstruction">
+		SELECT
+			a.id AS "id",
+			a.project_name AS "projectName",
+			a.leadership AS "leadership",
+			a.start_time AS "startTime",
+			a.annual_task AS "annualTask",
+			a.planned_investment AS "plannedInvestment",
+			a.progress AS "progress",
+			a.project_intro AS "projectIntro",
+			a.host_unit AS "hostUnit",
+			a.image_path AS "imagePath",
+			a.leader_image_path as "leaderImagePath"
+			FROM catch_project_construction a
+			ORDER BY a.rank
+	</select>
+</mapper>

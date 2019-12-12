@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.BusinessVenueDao">
+    
+	<sql id="businessVenueColumns">
+		a.id AS "id",
+		a.venue AS "venue",
+		a.num AS "num",
+		a.month as "month",
+		a.year AS "year"
+	</sql>
+	
+	<sql id="businessVenueJoins">
+	</sql>
+    
+	<select id="get" resultType="BusinessVenue">
+		SELECT 
+			<include refid="businessVenueColumns"/>
+		FROM business_venue a
+		<include refid="businessVenueJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BusinessVenue">
+		SELECT 
+			<include refid="businessVenueColumns"/>
+		FROM business_venue a
+		<include refid="businessVenueJoins"/>
+		<where>
+			<if test="venue != null and venue != ''">
+				AND a.venue = #{venue}
+			</if>
+			<if test="month != null and month != ''">
+				AND a.month = #{month}
+			</if>
+			<if test="year != null and year != ''">
+				AND a.year = #{year}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order BY `year` desc,`month`
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BusinessVenue">
+		SELECT 
+			<include refid="businessVenueColumns"/>
+		FROM business_venue a
+		<include refid="businessVenueJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO business_venue(
+			id,
+			venue,
+			num,
+			`month`,
+			year
+		) VALUES (
+			#{id},
+			#{venue},
+			#{num},
+			#{month},
+			#{year}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE business_venue SET 	
+			venue = #{venue},
+			num = #{num},
+			`month` = #{month},
+			year = #{year}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM business_venue
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

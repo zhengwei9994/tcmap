@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchTravelInfoDao">
+    
+	<sql id="catchTravelInfoColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.travel_name AS "travelName",
+		a.info_type AS "infoType",
+		a.info_value  AS "infoValue"
+	</sql>
+	
+	<sql id="catchTravelInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchTravelInfo">
+		SELECT 
+			<include refid="catchTravelInfoColumns"/>
+		FROM catch_travel_info a
+		<include refid="catchTravelInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchTravelInfo">
+		SELECT 
+			<include refid="catchTravelInfoColumns"/>
+		FROM catch_travel_info a
+		<include refid="catchTravelInfoJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="infoType != null and infoType != ''">
+				AND a.info_type = #{infoType}
+			</if>
+			<if test="infoValue != null and infoValue != ''">
+				AND a.info_value LIKE
+					<if test="dbName == 'oracle'">'%'||#{infoValue}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{infoValue}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{infoValue},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="groupByindexType" resultType="CatchTravelInfo">
+		SELECT
+		<include refid="catchTravelInfoColumns"/>
+		FROM catch_travel_info a
+		<include refid="catchTravelInfoJoins"/>
+		<where>
+
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+		GROUP BY index_type
+	</select>
+	
+	<select id="findAllList" resultType="CatchTravelInfo">
+		SELECT 
+			<include refid="catchTravelInfoColumns"/>
+		FROM catch_travel_info a
+		<include refid="catchTravelInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_travel_info(
+			id,
+			nyear,
+			travel_name,
+			info_type,
+			info_value
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{travelName},
+			#{infoType},
+			#{infoValue}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_travel_info(
+			id,
+			nyear,
+			travel_name,
+			info_type,
+			info_value
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.nyear},
+			#{item.travelName},
+			#{item.infoType},
+			#{item.infoValue}
+		)  
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_travel_info SET 	
+			nyear = #{nyear},
+			travel_name = #{travelName},
+			info_type = #{infoType},
+			info_value = #{infoValue}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_travel_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

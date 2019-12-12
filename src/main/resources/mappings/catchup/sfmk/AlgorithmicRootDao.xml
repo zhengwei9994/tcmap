@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.sfmk.dao.AlgorithmicRootDao">
+    
+	<sql id="algorithmicRootColumns">
+		a.id AS "id",
+		a.algorithmic AS "algorithmic",
+		a.type AS "type",
+		a.result AS "result"
+	</sql>
+	
+	<sql id="algorithmicRootJoins">
+	</sql>
+    
+	<select id="get" resultType="AlgorithmicRoot">
+		SELECT 
+			<include refid="algorithmicRootColumns"/>
+		FROM algorithmic_root a
+		<include refid="algorithmicRootJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AlgorithmicRoot">
+		SELECT 
+			<include refid="algorithmicRootColumns"/>
+		FROM algorithmic_root a
+		<include refid="algorithmicRootJoins"/>
+		<where>
+			
+			<if test="algorithmic != null and algorithmic != ''">
+				AND a.algorithmic LIKE 
+					<if test="dbName == 'oracle'">'%'||#{algorithmic}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{algorithmic}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{algorithmic},'%')</if>
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type LIKE 
+					<if test="dbName == 'oracle'">'%'||#{type}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{type}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{type},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AlgorithmicRoot">
+		SELECT 
+			<include refid="algorithmicRootColumns"/>
+		FROM algorithmic_root a
+		<include refid="algorithmicRootJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO algorithmic_root(
+			id,
+			algorithmic,
+			type,
+			result
+		) VALUES (
+			#{id},
+			#{algorithmic},
+			#{type},
+			#{result}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE algorithmic_root SET 	
+			algorithmic = #{algorithmic},
+			type = #{type},
+			result = #{result}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM algorithmic_root
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

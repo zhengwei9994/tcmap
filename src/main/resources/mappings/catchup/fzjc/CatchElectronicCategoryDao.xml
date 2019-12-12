@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchElectronicCategoryDao">
+    
+	<sql id="catchElectronicCategoryColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.value AS "value",
+		a.type AS "type"
+	</sql>
+	
+	<sql id="catchElectronicCategoryJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchElectronicCategory">
+		SELECT 
+			<include refid="catchElectronicCategoryColumns"/>
+		FROM catch_electronic_category a
+		<include refid="catchElectronicCategoryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchElectronicCategory">
+		SELECT 
+			<include refid="catchElectronicCategoryColumns"/>
+		FROM catch_electronic_category a
+		<include refid="catchElectronicCategoryJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchElectronicCategory">
+		SELECT 
+			<include refid="catchElectronicCategoryColumns"/>
+		FROM catch_electronic_category a
+		<include refid="catchElectronicCategoryJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_electronic_category(
+			id,
+			name,
+			value,
+			type
+		) VALUES (
+			#{id},
+			#{name},
+			#{value},
+			#{type}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_electronic_category(
+			id,
+			name,
+			value,
+			type
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+			#{item.id},
+			#{item.name},
+			#{item.value},
+			#{item.type}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_electronic_category SET 	
+			name = #{name},
+			value = #{value},
+			type = #{type}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_electronic_category
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

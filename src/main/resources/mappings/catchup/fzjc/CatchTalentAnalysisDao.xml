@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchTalentAnalysisDao">
+    
+	<sql id="catchTalentAnalysisColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.talent_type AS "talentType",
+		a.talent_month AS "talentMonth",
+		a.talent_count AS "talentCount"
+	</sql>
+	
+	<sql id="catchTalentAnalysisJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchTalentAnalysis">
+		SELECT 
+			<include refid="catchTalentAnalysisColumns"/>
+		FROM catch_talent_analysis a
+		<include refid="catchTalentAnalysisJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchTalentAnalysis">
+		SELECT 
+			<include refid="catchTalentAnalysisColumns"/>
+		FROM catch_talent_analysis a
+		<include refid="catchTalentAnalysisJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchTalentAnalysis">
+		SELECT 
+			<include refid="catchTalentAnalysisColumns"/>
+		FROM catch_talent_analysis a
+		<include refid="catchTalentAnalysisJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_talent_analysis(
+			id,
+			nyear,
+			talent_type,
+			talent_month,
+			talent_count
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{talentType},
+			#{talentMonth},
+			#{talentCount}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_talent_analysis(
+			id,
+			nyear,
+			talent_type,
+			talent_month,
+			talent_count
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.nyear},
+			#{item.talentType},
+			#{item.talentMonth},
+			#{item.talentCount}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_talent_analysis SET 	
+			nyear = #{nyear},
+			talent_type = #{talentType},
+			talent_month = #{talentMonth},
+			talent_count = #{talentCount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_talent_analysis
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

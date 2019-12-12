@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.CatchSwageTreatDao">
+
+    <sql id="catchSwageTreatDaoColumns">
+        a.id AS "id",
+        a.nyear AS "nyear",
+        a.month AS "month",
+        a.rank AS "rank",
+        a.swage_value AS "swageValue"
+    </sql>
+
+
+    <select id="get" resultType="catchSwageTreat">
+        SELECT
+        <include refid="catchSwageTreatDaoColumns"/>
+        FROM catch_swage_treat a
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="catchSwageTreat">
+        SELECT
+        <include refid="catchSwageTreatDaoColumns"/>
+        FROM catch_swage_treat a
+        <where>
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+        ORDER BY  nyear ,MONTH ASC 
+    </select>
+
+    <select id="findAllList" resultType="catchSwageTreat">
+        SELECT
+        <include refid="catchSwageTreatDaoColumns"/>
+        FROM catch_swage_treat a
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+        ORDER BY DATE ASC
+    </select>
+
+    <insert id="insert">
+        INSERT INTO catch_swage_treat(
+        id,
+        nyear,
+        month,
+        rank,
+        swage_value
+        ) VALUES (
+        #{id},
+        #{nyear},
+        #{month},
+        #{rank},
+        #{swageValue}
+        )
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO catch_swage_treat(
+        id,
+        nyear,
+        month,
+        rank,
+        swage_value
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.id},
+            #{item.nyear},
+            #{item.month},
+            #{item.rank},
+            #{item.swageValue}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update">
+        UPDATE catch_swage_treat SET
+        nyear = #{nyear},
+        month = #{month},
+        rank = #{rank},
+        swage_value = #{swageValue}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        DELETE FROM catch_swage_treat
+        WHERE id = #{id}
+    </update>
+</mapper>

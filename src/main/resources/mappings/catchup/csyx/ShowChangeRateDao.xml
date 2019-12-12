@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.csyx.dao.ShowChangeRateDao">
+    
+	<sql id="showChangeRateColumns">
+		a.id AS "id",
+		a.year AS "year",
+		a.gdp_growth AS "gdpGrowth",
+		a.investment_growth_rate AS "investmentGrowthRate",
+		a.save_rate AS "saveRate",
+		a.consumption_expenditure_rate AS "consumptionExpenditureRate"
+	</sql>
+	
+	<sql id="showChangeRateJoins">
+	</sql>
+    
+	<select id="get" resultType="ShowChangeRate">
+		SELECT 
+			<include refid="showChangeRateColumns"/>
+		FROM show_change_rate a
+		<include refid="showChangeRateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShowChangeRate">
+		SELECT 
+			<include refid="showChangeRateColumns"/>
+		FROM show_change_rate a
+		<include refid="showChangeRateJoins"/>
+		<where>
+			<if test="year != null and year != ''">
+				and a.YEAR = #{year}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<select id="findByYear" resultType="ShowChangeRate">
+		SELECT
+		<include refid="showChangeRateColumns"/>
+		FROM show_change_rate a
+		<include refid="showChangeRateJoins"/>
+		<where>
+			<if test="year != null and year != ''">
+				and a.YEAR = #{year}
+			</if>
+		</where>
+	</select>
+	<select id="findAllList" resultType="ShowChangeRate">
+		SELECT 
+			<include refid="showChangeRateColumns"/>
+		FROM show_change_rate a
+		<include refid="showChangeRateJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO show_change_rate(
+			id,
+			year,
+			gdp_growth,
+			investment_growth_rate,
+			save_rate,
+			consumption_expenditure_rate
+		) VALUES (
+			#{id},
+			#{year},
+			#{gdpGrowth},
+			#{investmentGrowthRate},
+			#{saveRate},
+			#{consumptionExpenditureRate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE show_change_rate SET 	
+			year = #{year},
+			gdp_growth = #{gdpGrowth},
+			investment_growth_rate = #{investmentGrowthRate},
+			save_rate = #{saveRate},
+			consumption_expenditure_rate = #{consumptionExpenditureRate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM show_change_rate
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchHingeStatisticsDao">
+    
+	<sql id="catchHingeStatisticsColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.hinge_type AS "hingeType",
+		a.hinge_number AS "hingeNumber"
+	</sql>
+	
+	<sql id="catchHingeStatisticsJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchHingeStatistics">
+		SELECT 
+			<include refid="catchHingeStatisticsColumns"/>
+		FROM catch_hinge_statistics a
+		<include refid="catchHingeStatisticsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchHingeStatistics">
+		SELECT 
+			<include refid="catchHingeStatisticsColumns"/>
+		FROM catch_hinge_statistics a
+		<include refid="catchHingeStatisticsJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+			<if test="hingeType != null and hingeType != ''">
+				AND a.hinge_type = #{hingeType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchHingeStatistics">
+		SELECT 
+			<include refid="catchHingeStatisticsColumns"/>
+		FROM catch_hinge_statistics a
+		<include refid="catchHingeStatisticsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_hinge_statistics(
+			id,
+			nyear,
+			hinge_type,
+			hinge_number
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{hingeType},
+			#{hingeNumber}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE catch_hinge_statistics SET 	
+			nyear = #{nyear},
+			hinge_type = #{hingeType},
+			hinge_number = #{hingeNumber}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+	DELETE FROM catch_hinge_statistics
+	WHERE id = #{id}
+</update>
+	<update id="deleteAll">
+		DELETE FROM catch_hinge_statistics
+	</update>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_hinge_statistics(
+		id,
+		nyear,
+		hinge_type,
+		hinge_number
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id}, #{item.nyear},	#{item.hingeType},#{item.hingeNumber})
+		</foreach>
+	</insert>
+</mapper>

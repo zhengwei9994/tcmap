@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchServiceIndicatorsDao">
+    
+	<sql id="catchServiceIndicatorsColumns">
+		a.id AS "id",
+		a.area_name AS "areaName",
+		a.fiber AS "fiber",
+		a.broadband AS "broadband",
+		a.hospital AS "hospital",
+		a.security AS "security",
+		a.uniform AS "uniform",
+		a.processing AS "processing"
+	</sql>
+	
+	<sql id="catchServiceIndicatorsJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchServiceIndicators">
+		SELECT 
+			<include refid="catchServiceIndicatorsColumns"/>
+		FROM catch_service_indicators a
+		<include refid="catchServiceIndicatorsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchServiceIndicators">
+		SELECT 
+			<include refid="catchServiceIndicatorsColumns"/>
+		FROM catch_service_indicators a
+		<include refid="catchServiceIndicatorsJoins"/>
+		<where>		
+			<if test="areaName != null and areaName != ''">
+				AND a.area_name like  CONCAT('%',#{areaName},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchServiceIndicators">
+		SELECT 
+			<include refid="catchServiceIndicatorsColumns"/>
+		FROM catch_service_indicators a
+		<include refid="catchServiceIndicatorsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_service_indicators(
+			id,
+			area_name,
+			fiber,
+			broadband,
+			hospital,
+			security,
+			uniform,
+			processing
+		) VALUES (
+			#{id},
+			#{areaName},
+			#{fiber},
+			#{broadband},
+			#{hospital},
+			#{security},
+			#{uniform},
+			#{processing}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_service_indicators(
+			id,
+			area_name,
+			fiber,
+			broadband,
+			hospital,
+			security,
+			uniform,
+			processing
+		) VALUES 
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.areaName},
+			#{item.fiber},
+			#{item.broadband},
+			#{item.hospital},
+			#{item.security},
+			#{item.uniform},
+			#{item.processing}
+		)
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_service_indicators SET 	
+			area_name = #{areaName},
+			fiber = #{fiber},
+			broadband = #{broadband},
+			hospital = #{hospital},
+			security = #{security},
+			uniform = #{uniform},
+			processing = #{processing}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_service_indicators
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

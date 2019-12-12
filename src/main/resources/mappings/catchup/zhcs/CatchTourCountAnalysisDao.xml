@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchTourCountAnalysisDao">
+    
+	<sql id="catchTourCountAnalysisColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.tour_count AS "tourCount",
+		a.tour_day AS "tourDay"
+	</sql>
+	
+	<sql id="catchTourCountAnalysisJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchTourCountAnalysis">
+		SELECT 
+			<include refid="catchTourCountAnalysisColumns"/>
+		FROM catch_tour_count_analysis a
+		<include refid="catchTourCountAnalysisJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchTourCountAnalysis">
+		SELECT 
+			<include refid="catchTourCountAnalysisColumns"/>
+		FROM catch_tour_count_analysis a
+		<include refid="catchTourCountAnalysisJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchTourCountAnalysis">
+		SELECT 
+			<include refid="catchTourCountAnalysisColumns"/>
+		FROM catch_tour_count_analysis a
+		<include refid="catchTourCountAnalysisJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_tour_count_analysis(
+			id,
+			nyear,
+			tour_count,
+			tour_day
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{tourCount},
+			#{tourDay}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_tour_count_analysis(
+			id,
+			nyear,
+			tour_count,
+			tour_day
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.nyear},
+			#{item.tourCount},
+			#{item.tourDay}
+		)  
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_tour_count_analysis SET 	
+			nyear = #{nyear},
+			tour_count = #{tourCount},
+			tour_day = #{tourDay}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_tour_count_analysis
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

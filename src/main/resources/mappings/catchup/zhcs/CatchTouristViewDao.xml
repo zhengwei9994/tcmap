@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.zhcs.dao.CatchTouristViewDao">
+    
+	<sql id="catchTouristViewColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.lon AS "lon",
+		a.lat AS "lat",
+		a.rank AS "rank",
+		a.area_name as "areaName"
+	</sql>
+	
+	<sql id="catchTouristViewJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchTouristView">
+		SELECT 
+			<include refid="catchTouristViewColumns"/>
+		FROM catch_tourist_view a
+		<include refid="catchTouristViewJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchTouristView">
+		SELECT 
+			<include refid="catchTouristViewColumns"/>
+		FROM catch_tourist_view a
+		<include refid="catchTouristViewJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchTouristView">
+		SELECT 
+			<include refid="catchTouristViewColumns"/>
+		FROM catch_tourist_view a
+		<include refid="catchTouristViewJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_tourist_view(
+			id,
+			name,
+			lon,
+			lat,
+			rank,
+			area_name
+		) VALUES (
+			#{id},
+			#{name},
+			#{lon},
+			#{lat},
+			#{rank},
+			#{areaName}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_tourist_view(
+			id,
+			name,
+			lon,
+			lat,
+			rank,
+		area_name,
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.name},
+			#{item.lon},
+			#{item.lat},
+			#{item.rank},
+			#{item.areaName}
+		)  
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_tourist_view SET 	
+			name = #{name},
+			lon = #{lon},
+			lat = #{lat},
+			rank = #{rank},
+			area_name =#{areaName}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_tourist_view
+		WHERE id = #{id}
+	</update>
+
+	<select id="totalData" resultType="string">
+		SELECT
+		count(*)
+		FROM catch_tourist_view a
+		<where>
+			a.rank = #{rank}
+		</where>
+	</select>
+</mapper>

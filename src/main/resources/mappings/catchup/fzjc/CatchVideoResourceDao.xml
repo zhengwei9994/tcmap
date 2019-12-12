@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xy.tcmap.modules.catchup.fzjc.dao.CatchVideoResourceDao">
+    
+	<sql id="catchVideoResourceColumns">
+		a.id AS "id",
+		a.nyear AS "nyear",
+		a.key_regional_coverage AS "keyRegionalCoverage",
+		a.coverage_key_areas AS "coverageKeyAreas",
+		a.high_definition_camera AS "highDefinitionCamera",
+		a.camera_integrity_ratio AS "cameraIntegrityRatio",
+		a.machine_completion_key AS "machineCompletionKey"
+	</sql>
+	
+	<sql id="catchVideoResourceJoins">
+	</sql>
+    
+	<select id="get" resultType="CatchVideoResource">
+		SELECT 
+			<include refid="catchVideoResourceColumns"/>
+		FROM catch_video_resource a
+		<include refid="catchVideoResourceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CatchVideoResource">
+		SELECT 
+			<include refid="catchVideoResourceColumns"/>
+		FROM catch_video_resource a
+		<include refid="catchVideoResourceJoins"/>
+		<where>
+			
+			<if test="nyear != null and nyear != ''">
+				AND a.nyear = #{nyear}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CatchVideoResource">
+		SELECT 
+			<include refid="catchVideoResourceColumns"/>
+		FROM catch_video_resource a
+		<include refid="catchVideoResourceJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO catch_video_resource(
+			id,
+			nyear,
+			key_regional_coverage,
+			coverage_key_areas,
+			high_definition_camera,
+			camera_integrity_ratio,
+			machine_completion_key
+		) VALUES (
+			#{id},
+			#{nyear},
+			#{keyRegionalCoverage},
+			#{coverageKeyAreas},
+			#{highDefinitionCamera},
+			#{cameraIntegrityRatio},
+			#{machineCompletionKey}
+		)
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO catch_video_resource(
+			id,
+			nyear,
+			key_regional_coverage,
+			coverage_key_areas,
+			high_definition_camera,
+			camera_integrity_ratio,
+			machine_completion_key
+		) VALUES
+		<foreach collection="list" item="item" separator=",">
+			 (
+			#{item.id},
+			#{item.nyear},
+			#{item.keyRegionalCoverage},
+			#{item.coverageKeyAreas},
+			#{item.highDefinitionCamera},
+			#{item.cameraIntegrityRatio},
+			#{item.machineCompletionKey}
+		)  
+		</foreach>
+	</insert>
+	<update id="update">
+		UPDATE catch_video_resource SET 	
+			nyear = #{nyear},
+			key_regional_coverage = #{keyRegionalCoverage},
+			coverage_key_areas = #{coverageKeyAreas},
+			high_definition_camera = #{highDefinitionCamera},
+			camera_integrity_ratio = #{cameraIntegrityRatio},
+			machine_completion_key = #{machineCompletionKey}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM catch_video_resource
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
